@@ -12,9 +12,9 @@
 _✨ MAA 终末地小助手 ✨_
 <!-- prettier-ignore-end -->
 
-Powered by [MaaFramework](https://github.com/MaaXYZ/MaaFramework) & [MXU](https://github.com/MistEO/MXU)  
+Powered by [MaaFramework](https://github.com/MaaXYZ/MaaFramework) & [MXU](https://github.com/MistEO/MXU)
 
-绝赞开发中 🎉…… 
+绝赞开发中 🎉……
 
 </div>
 
