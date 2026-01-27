@@ -166,7 +166,9 @@
                 "PuzzleSolverMode"
             ],
             "controller": [
-                "Win32"
+                "Win32",
+                "Win32-Window",
+                "Win32-Front"
             ]
         },
         {
@@ -184,8 +186,10 @@
             ]
         },
         {
-            "name": "test",
+            "name": "Resell",
             "entry": "ResellStart",
+            "label": "$task.Resell.label",
+            "description": "$task.Resell.description",
             "controller": [
                 "Win32",
                 "Win32-Window",
