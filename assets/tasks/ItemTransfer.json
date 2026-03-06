@@ -458,13 +458,16 @@
                             "template": "ItemTransfer/植物.png"
                         },
                         "ItemTransferFindItemInRepo": {
-                            "expected": 134
+                            "expected": 134,
+                            "threshold": 0.6
                         },
                         "ItemTransferFindItemInBag": {
-                            "expected": 134
+                            "expected": 134,
+                            "threshold": 0.6
                         },
                         "ItemTransferFindItemInBagReturn": {
-                            "expected": 134
+                            "expected": 134,
+                            "threshold": 0.6
                         }
                     }
                 },
