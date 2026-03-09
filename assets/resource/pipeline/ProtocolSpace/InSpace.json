@@ -19,6 +19,7 @@
             }
         ],
         "action": "Click",
+        "post_wait_freezes": 500,
         "next": [
             "ProtocolSpacePopupSanityLow",
             "ProtocolSpaceEnterSpaceConfirm"
