@@ -9,7 +9,7 @@ namespace mapnavigator
 
 struct TurnScaleEstimator
 {
-    double units_per_degree = kDefaultPixelsPerDegree;
+    double units_per_degree = ComputeDefaultUnitsPerDegree();
     double alpha = kTurnScaleSmoothingAlpha;
     double min_units_per_degree = kTurnScaleMinUnitsPerDegree;
     double max_units_per_degree = kTurnScaleMaxUnitsPerDegree;

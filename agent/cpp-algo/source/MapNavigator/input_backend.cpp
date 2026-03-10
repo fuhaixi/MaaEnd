@@ -58,12 +58,30 @@ bool RequiresTouchBackend(std::string_view controller_type)
     return controller_type == "adb";
 }
 
+double ComputeDefaultTurnUnitsPerDegree(MaaController* ctrl)
+{
+    int32_t screen_width = 0;
+    int32_t screen_height = 0;
+    if (!MaaControllerGetResolution(ctrl, &screen_width, &screen_height) || screen_width <= 0) {
+        LogWarn << "Failed to get raw controller resolution, fallback to default turn scale."
+                << VAR(screen_width) << VAR(screen_height);
+        return ComputeDefaultUnitsPerDegree();
+    }
+
+    const int turn360 = ComputeTurn360Units(screen_width);
+    const double units_per_degree = ComputeUnitsPerDegreeForWidth(screen_width);
+    LogInfo << "Computed turn scale from raw controller resolution."
+            << VAR(screen_width) << VAR(screen_height) << VAR(turn360) << VAR(units_per_degree);
+    return units_per_degree;
+}
+
 class DesktopInputBackend final : public IInputBackend
 {
 public:
     DesktopInputBackend(MaaController* ctrl, std::string controller_type)
         : ctrl_(ctrl)
         , controller_type_(std::move(controller_type))
+        , default_turn_units_per_degree_(ComputeDefaultTurnUnitsPerDegree(ctrl))
     {
     }
 
@@ -77,7 +95,7 @@ public:
 
     const std::string& unsupported_reason() const override { return unsupported_reason_; }
 
-    double default_turn_units_per_degree() const override { return kDefaultPixelsPerDegree; }
+    double default_turn_units_per_degree() const override { return default_turn_units_per_degree_; }
 
     void KeyDownSync(int key_code, int delay_millis) override
     {
@@ -165,6 +183,7 @@ private:
     MaaController* ctrl_ = nullptr;
     std::string controller_type_;
     std::string unsupported_reason_;
+    double default_turn_units_per_degree_ = ComputeDefaultUnitsPerDegree();
     int hover_x_ = kWorkCx;
     int hover_y_ = kWorkCy;
     bool hover_inited_ = false;
@@ -181,6 +200,7 @@ public:
         , controller_type_(std::move(controller_type))
         , placeholder_reason_(std::move(placeholder_reason))
         , uses_touch_backend_(uses_touch_backend)
+        , default_turn_units_per_degree_(ComputeDefaultTurnUnitsPerDegree(ctrl))
     {
     }
 
@@ -194,7 +214,7 @@ public:
 
     const std::string& unsupported_reason() const override { return placeholder_reason_; }
 
-    double default_turn_units_per_degree() const override { return kDefaultPixelsPerDegree; }
+    double default_turn_units_per_degree() const override { return default_turn_units_per_degree_; }
 
     void KeyDownSync(int key_code, int delay_millis) override { ReservedCall("KeyDownSync", key_code, delay_millis); }
 
@@ -225,6 +245,7 @@ private:
     std::string controller_type_;
     std::string placeholder_reason_;
     bool uses_touch_backend_ = false;
+    double default_turn_units_per_degree_ = ComputeDefaultUnitsPerDegree();
 };
 
 } // namespace

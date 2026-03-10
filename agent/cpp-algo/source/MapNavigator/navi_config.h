@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <cstdint>
 
 namespace mapnavigator
@@ -21,7 +22,24 @@ constexpr int32_t kPrimaryTouchContactId = 1;
 constexpr int32_t kDefaultTouchPressure = 0;
 
 // --- ActionWrapper Constants ---
-constexpr double kDefaultPixelsPerDegree = 5690.0 / 360.0;
+constexpr double kTurn360UnitsPerWidth = 2.23006;
+constexpr double kTurnDegreesPerCircle = 360.0;
+
+inline int ComputeTurn360Units(int32_t screen_width)
+{
+    return static_cast<int>(std::lround(kTurn360UnitsPerWidth * static_cast<double>(screen_width)));
+}
+
+inline double ComputeUnitsPerDegreeForWidth(int32_t screen_width)
+{
+    return static_cast<double>(ComputeTurn360Units(screen_width)) / kTurnDegreesPerCircle;
+}
+
+inline double ComputeDefaultUnitsPerDegree()
+{
+    return ComputeUnitsPerDegreeForWidth(kWorkWidth);
+}
+
 constexpr int32_t kActionSprintPressMs = 30;
 constexpr int32_t kActionJumpHoldMs = 50;
 constexpr int32_t kActionJumpSettleMs = 500;
