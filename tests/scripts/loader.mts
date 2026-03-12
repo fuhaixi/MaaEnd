@@ -125,7 +125,7 @@ export async function fetchCases(): Promise<TestCases[]> {
     // 'PlayCover': '',
   }
 
-  const testsRoot = path.resolve(import.meta.dirname, 'tests')
+  const testsRoot = path.resolve(import.meta.dirname, '..')
   const [
     allTestCases,
     failPaths,
