@@ -13,7 +13,7 @@ on:
         type: number
 
 jobs:
-  request-analysis:
+  copilot-analysis:
     if: |
       (github.event_name == 'issues' && github.event.action == 'opened') ||
       github.event_name == 'workflow_dispatch' ||
@@ -22,10 +22,6 @@ jobs:
        contains(github.event.comment.body, '@MaaEndBot') && 
        github.event.comment.user.type != 'Bot')
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-    env:
-      COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -33,33 +29,52 @@ jobs:
         run: npm install -g @github/copilot
 
       - name: Determine issue number
-        id: number
+        id: issue_number
         run: |
           if [[ "${{ github.event_name }}" == "issues" ]] || [[ "${{ github.event_name }}" == "issue_comment" ]]; then
-            echo "ISSUE_NUMBER=${{ github.event.issue.number }}" >> $GITHUB_ENV
+            echo "issue_number=${{ github.event.issue.number }}" | tee -a "$GITHUB_OUTPUT"
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "ISSUE_NUMBER=${{ github.event.inputs.issue_number }}" >> $GITHUB_ENV
+            echo "issue_number=${{ github.event.inputs.issue_number }}" | tee -a "$GITHUB_OUTPUT"
           else
             echo "Unknown trigger" && exit 1
           fi
 
-      - name: Build full issue context and request AI analysis
+      # 步骤 1：发布初始中文评论，提示正在分析，并附上 Actions 运行链接
+      - name: Create initial comment
+        id: initial_comment
+        uses: peter-evans/create-or-update-comment@main
+        with:
+          issue-number: ${{ steps.issue_number.outputs.issue_number }}
+          body: |
+            🤖 **MaaEndBot 正在分析该 Issue...**  
+            请稍候，我正在分析此问题。  
+            您可以在此查看进度：[GitHub Action 运行记录](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          token: ${{ secrets.MAAEND_BOT_TOKEN }}
+
+      # 步骤 2：执行 AI 分析，生成结果文件 copilot_answer.md
+      - name: AI analysis
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
-          copilot --allow-all --no-ask-user \
-          -- model gpt-5-mini \
-          # --model gpt-5.4 --reasoning-effort xhigh \
-          --prompt "分析一下#${{ env.ISSUE_NUMBER }}" \
-          >> $COPILOT_ANSWER
+          copilot --yolo --model gpt-5.4 --reasoning-effort xhigh \
+            --prompt "分析一下 #${{ steps.issue_number.outputs.issue_number }}，将你的结论输出到 copilot_answer.md"
+          cat copilot_answer.md
 
-          echo "COPILOT_ANSWER=$COPILOT_ANSWER" >> $GITHUB_ENV
+      # 步骤 3：将分析结果与运行链接合并，准备最终评论内容（中文链接描述）
+      - name: Prepare final comment
+        run: |
+          # 复制分析结果到新文件
+          cp copilot_answer.md final_comment.md
+          # 添加分隔线和中文运行链接描述
+          echo "" >> final_comment.md
+          echo "---" >> final_comment.md
+          echo "🔗 [查看 Action 运行记录](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> final_comment.md
 
-      - name: Create or Update Comment
-        uses: peter-evans/create-or-update-comment@v1
+      # 步骤 4：更新之前发布的评论，替换为分析结论 + 运行链接
+      - name: Update comment with analysis result
+        uses: peter-evans/create-or-update-comment@main
         with:
-          issue-number: ${{ env.ISSUE_NUMBER }}
-          body: ${{ env.COPILOT_ANSWER }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          comment-id: ${{ steps.initial_comment.outputs.comment-id }}
+          body-path: final_comment.md
+          token: ${{ secrets.MAAEND_BOT_TOKEN }}
