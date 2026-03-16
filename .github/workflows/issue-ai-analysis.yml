@@ -15,10 +15,14 @@ on:
 env:
   # 初始评论内容（包含运行链接，仅出现一次）
   INITIAL_BODY: |
-    🤖 **MaaEndBot 正在分析该 Issue...**  
+    🤖 **MaaBot 正在分析该 Issue...**  
     感谢您的反馈！AI 正在自动分析该问题，预计耗时约 10 分钟。
   ACTION_LINK: |
     🔗 [GitHub Action 运行记录](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+  DETAILS_BEGIN: |
+    <details><summary>点击此处展开分析过程</summary>
+  DETAILS_END: |
+    </details>
 
 jobs:
   copilot-analysis:
@@ -117,9 +121,9 @@ jobs:
                   echo ""
                   echo "---"
                   echo ""
-                  echo "<details><summary>点击此处展开/折叠分析过程</summary>"
+                  echo "${{ env.DETAILS_BEGIN }}"
                   echo "$current_content"
-                  echo "</details>"
+                  echo "${{ env.DETAILS_END }}"
                   echo ""
                   echo "${{ env.ACTION_LINK }}"
                 } > "$BODY_FILE"
@@ -146,7 +150,6 @@ jobs:
           echo "---"
           echo ""
           cat copilot_answer.md
-          
 
       # 步骤 3：将分析结果与运行链接合并，准备最终评论内容（中文链接描述）
       - name: Prepare final comment
@@ -157,9 +160,9 @@ jobs:
           echo "" >> final_comment.md
           echo "---" >> final_comment.md
           echo "" >> final_comment.md
-          echo "<details><summary>点击此处展开分析过程</summary>" >> final_comment.md
+          echo "${{ env.DETAILS_BEGIN }}" >> final_comment.md
           cat copilot_output.log >> final_comment.md
-          echo "</details>" >> final_comment.md
+          echo "${{ env.DETAILS_END }}" >> final_comment.md
           echo "" >> final_comment.md
           echo "${{ env.ACTION_LINK }}" >> final_comment.md
 
