@@ -143,6 +143,7 @@
         "tasks/ProtocolSpace.json",
         "tasks/GiftOperator.json",
         "tasks/AutoEcoFarm.json",
+        "tasks/AutoCollect.json",
         // group: realtime
         "tasks/RealTimeTask.json",
         // group: utility
