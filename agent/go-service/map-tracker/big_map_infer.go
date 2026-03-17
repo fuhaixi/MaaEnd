@@ -36,6 +36,7 @@ type MapTrackerBigMapInfer struct {
 
 	scaledMapsMu sync.Mutex
 	scaledMaps   []MapCache
+	scaledScale  float64
 }
 
 var _ maa.CustomRecognitionRunner = &MapTrackerBigMapInfer{}
@@ -101,8 +102,6 @@ func (r *MapTrackerBigMapInfer) Run(ctx *maa.Context, arg *maa.CustomRecognition
 		}
 	}
 	triedMaps = len(candidateMaps)
-
-	t1 := time.Now()
 
 	type coarseResult struct {
 		score    float64
@@ -226,8 +225,6 @@ func (r *MapTrackerBigMapInfer) Run(ctx *maa.Context, arg *maa.CustomRecognition
 		Float64("y", result.ViewPort.OriginMapY).
 		Float64("scale", result.ViewPort.Scale).
 		Int64("inferTimeMs", result.InferTimeMs).
-		Dur("prepareDuration", t1.Sub(t0)).
-		Dur("matchingDuration", time.Since(t1)).
 		Msg("Big-map inference completed")
 
 	return &maa.CustomRecognitionResult{
@@ -275,6 +272,10 @@ func (r *MapTrackerBigMapInfer) getScaledMaps(scale float64) []MapCache {
 	r.scaledMapsMu.Lock()
 	defer r.scaledMapsMu.Unlock()
 
+	if r.scaledMaps != nil && math.Abs(r.scaledScale-scale) < 1e-6 {
+		return r.scaledMaps
+	}
+
 	newScaled := make([]MapCache, 0, len(mapTrackerResource.rawMaps))
 	for _, m := range mapTrackerResource.rawMaps {
 		sImg := minicv.ImageScale(m.Img, scale)
@@ -287,6 +288,7 @@ func (r *MapTrackerBigMapInfer) getScaledMaps(scale float64) []MapCache {
 	}
 
 	r.scaledMaps = newScaled
+	r.scaledScale = scale
 	return r.scaledMaps
 }
 
