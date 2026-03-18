@@ -12,6 +12,7 @@
                 "box_index": 1
             }
         },
+        "pre_delay": 0,
         "action": {
             "type": "Click",
             "param": {
@@ -23,13 +24,12 @@
                 ]
             }
         },
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "post_wait_freezes": {
             "time": 80,
             "timeout": 1000
         },
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "RecoveryEmotionAssistUseAssist"
         ],
@@ -50,6 +50,7 @@
                 "box_index": 1
             }
         },
+        "pre_delay": 0,
         "action": {
             "type": "Click",
             "param": {
@@ -61,13 +62,12 @@
                 ]
             }
         },
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "post_wait_freezes": {
             "time": 80,
             "timeout": 1000
         },
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "RecoveryEmotionAssistUseAssist"
         ],
@@ -76,10 +76,6 @@
         }
     },
     "RecoveryEmotionAssistUseAssist": {
-        "timeout": 5000,
-        "on_error": [
-            "RecoveryEmotion_OnError"
-        ],
         "desc": "[恢复心情·需要助力] 点击使用助力",
         "recognition": {
             "type": "And",
@@ -91,14 +87,18 @@
                 "box_index": 1
             }
         },
+        "pre_delay": 0,
         "action": {
             "type": "Click"
         },
         "post_delay": 0,
-        "pre_delay": 0,
+        "timeout": 5000,
         "rate_limit": 0,
         "next": [
             "StartRecoveryEmotion"
+        ],
+        "on_error": [
+            "RecoveryEmotion_OnError"
         ]
     },
     "StartRecoveryEmotion_OnError": {
@@ -121,8 +121,8 @@
                 ]
             }
         },
-        "post_delay": 0,
         "pre_delay": 0,
+        "post_delay": 0,
         "rate_limit": 0,
         "next": [
             "EmotionFull",
@@ -131,10 +131,6 @@
         ]
     },
     "EmotionFull": {
-        "timeout": 5000,
-        "on_error": [
-            "StartRecoveryEmotion_OnError"
-        ],
         "desc": "[恢复心情·意外] 点击了满心情/无法助力干员时的提示，返回控制中枢重新进入",
         "recognition": {
             "type": "OCR",
@@ -159,11 +155,15 @@
                 ]
             }
         },
-        "post_delay": 0,
         "pre_delay": 0,
+        "post_delay": 0,
+        "timeout": 5000,
         "rate_limit": 0,
         "next": [
             "BackToControlNexus"
+        ],
+        "on_error": [
+            "StartRecoveryEmotion_OnError"
         ],
         "focus": {
             "Node.PipelineNode.Failed": "处理满心情或无法助力提示失败"
@@ -189,8 +189,8 @@
                 ]
             }
         },
-        "post_delay": 0,
         "pre_delay": 0,
+        "post_delay": 0,
         "rate_limit": 0,
         "next": [
             "EmotionFull",
@@ -199,10 +199,6 @@
         ]
     },
     "SelectLowEmotion": {
-        "timeout": 5000,
-        "on_error": [
-            "StartRecoveryEmotion_OnError"
-        ],
         "desc": "[恢复心情·操作] 在列表中识别心情条有空缺的干员并点击",
         "max_hit": 6,
         "recognition": {
@@ -216,6 +212,7 @@
                 "box_index": 2
             }
         },
+        "pre_delay": 0,
         "action": {
             "type": "Click",
             "param": {
@@ -228,10 +225,13 @@
             }
         },
         "post_delay": 0,
-        "pre_delay": 0,
+        "timeout": 5000,
         "rate_limit": 0,
         "next": [
             "StartRecoveryEmotion"
+        ],
+        "on_error": [
+            "StartRecoveryEmotion_OnError"
         ]
     },
     "EmotionIcon": {
@@ -312,10 +312,6 @@
         }
     },
     "CouldNotAssistEmotion": {
-        "timeout": 5000,
-        "on_error": [
-            "StartRecoveryEmotion_OnError"
-        ],
         "desc": "[恢复心情·收尾] 没有更多心情激励点数时的提示，返回控制中枢或关闭",
         "recognition": {
             "type": "OCR",
@@ -336,11 +332,15 @@
                 ]
             }
         },
-        "post_delay": 0,
         "pre_delay": 0,
+        "post_delay": 0,
+        "timeout": 5000,
         "rate_limit": 0,
         "next": [
             "ConfirmRecoveryEmotion"
+        ],
+        "on_error": [
+            "StartRecoveryEmotion_OnError"
         ],
         "focus": {
             "Node.PipelineNode.Failed": "没有更多心情激励点数提示处理失败"
@@ -367,8 +367,8 @@
                 ]
             }
         },
-        "post_delay": 0,
         "pre_delay": 0,
+        "post_delay": 0,
         "rate_limit": 0,
         "next": [
             "ConfirmRecoveryEmotion"
@@ -378,10 +378,6 @@
         }
     },
     "ConfirmRecoveryEmotion": {
-        "timeout": 5000,
-        "on_error": [
-            "CouldNotAssistEmotion_OnError"
-        ],
         "recognition": {
             "type": "And",
             "param": {
@@ -392,14 +388,18 @@
                 "box_index": 1
             }
         },
+        "pre_delay": 0,
         "action": {
             "type": "Click"
         },
         "post_delay": 0,
-        "pre_delay": 0,
+        "timeout": 5000,
         "rate_limit": 0,
         "next": [
             "CloseButtonType1"
+        ],
+        "on_error": [
+            "CouldNotAssistEmotion_OnError"
         ]
     },
     "EmotionFull_OnError": {
@@ -427,8 +427,8 @@
                 ]
             }
         },
-        "post_delay": 0,
         "pre_delay": 0,
+        "post_delay": 0,
         "rate_limit": 0,
         "next": [
             "BackToControlNexus"
@@ -438,10 +438,6 @@
         }
     },
     "BackToControlNexus": {
-        "timeout": 5000,
-        "on_error": [
-            "EmotionFull_OnError"
-        ],
         "desc": "[恢复心情·离开] 在恢复心情/助力等子界面点击左上返回按钮回到控制中枢",
         "recognition": {
             "type": "TemplateMatch",
@@ -457,14 +453,18 @@
                 ]
             }
         },
-        "post_delay": 0,
         "pre_delay": 0,
-        "rate_limit": 0,
         "action": {
             "type": "Click"
         },
+        "post_delay": 0,
+        "timeout": 5000,
+        "rate_limit": 0,
         "next": [
             "CloseButtonType1"
+        ],
+        "on_error": [
+            "EmotionFull_OnError"
         ]
     }
 }

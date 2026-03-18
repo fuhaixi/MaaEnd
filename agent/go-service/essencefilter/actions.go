@@ -531,8 +531,8 @@ func (a *EssenceFilterRowCollectAction) Run(ctx *maa.Context, arg *maa.CustomAct
 
 				roiX := bx1
 				roiY := by1 + int(float64(bh)*0.65)
-				roiW := int(float64(bw)*0.30)
-				roiH := int(float64(bh)*0.35)
+				roiW := int(float64(bw) * 0.30)
+				roiH := int(float64(bh) * 0.35)
 
 				thumbDetail, err := ctx.RunRecognition("EssenceThumbMarked", img, map[string]any{
 					"EssenceThumbMarked": map[string]any{

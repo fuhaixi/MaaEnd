@@ -14,7 +14,7 @@
     "VisitFriendsRecognitionItemName": {
         "desc": "识别好友名称",
         "recognition": "OCR",
-        "roi":[
+        "roi": [
             130,
             110,
             300,

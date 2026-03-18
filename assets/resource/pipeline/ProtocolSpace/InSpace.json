@@ -46,8 +46,6 @@
     "ProtocolSpaceTeamChoose": {
         "desc": "选择协议空间队伍",
         "recognition": "And",
-        "pre_delay": 0,
-        "post_delay": 0,
         "all_of": [
             "ProtocolSpaceTeamChooseTextRecognition",
             {
@@ -72,8 +70,10 @@
                 "connected": true
             }
         ],
+        "pre_delay": 0,
         "action": "Click",
         "post_wait_freezes": 200,
+        "post_delay": 0,
         "focus": {
             "Node.Action.Succeeded": "选择队伍"
         }

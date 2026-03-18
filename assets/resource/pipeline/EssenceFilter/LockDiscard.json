@@ -72,12 +72,17 @@
             "Node.Action.Succeeded": "已确认上锁"
         }
     },
-"EssenceThumbMarked": {
+    "EssenceThumbMarked": {
         "desc": "检测基质左下角锁定或废弃小图标",
         "recognition": {
             "type": "TemplateMatch",
             "param": {
-                "roi": [1, 1, 1, 1],
+                "roi": [
+                    1,
+                    1,
+                    1,
+                    1
+                ],
                 "template": [
                     "EssenceFilter/ThumbLock.png",
                     "EssenceFilter/ThumbDiscard.png"

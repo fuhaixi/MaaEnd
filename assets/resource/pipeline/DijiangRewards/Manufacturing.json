@@ -62,10 +62,6 @@
         }
     },
     "EntryMFGCarbinSuccess": {
-        "timeout": 3000,
-        "on_error": [
-            "MFG_ReceiveRewards_OnError"
-        ],
         "recognition": {
             "type": "And",
             "param": {
@@ -78,12 +74,16 @@
         },
         "pre_delay": 0,
         "post_delay": 0,
+        "timeout": 3000,
         "rate_limit": 0,
         "next": [
             "MFGCarbinNeedTake",
             "MFGCarbinNeedReStock",
             "MFGCarbinNeedAssist",
             "Exit_MFG_Cabin"
+        ],
+        "on_error": [
+            "MFG_ReceiveRewards_OnError"
         ]
     },
     "EntryMFGCarbinSuccess_OnError": {
@@ -164,10 +164,6 @@
         ]
     },
     "MFGCarbinNeedReStockClose": {
-        "timeout": 3000,
-        "on_error": [
-            "MFGCarbinNeedReStock_OnError"
-        ],
         "desc": "[制造舱·需要补货] 点击补货完成界面确认按钮",
         "recognition": {
             "type": "And",
@@ -182,17 +178,17 @@
         "pre_delay": 0,
         "action": "Click",
         "post_delay": 0,
+        "timeout": 3000,
         "rate_limit": 0,
         "next": [
             "MFGCarbinNeedAssist",
             "Exit_MFG_Cabin"
+        ],
+        "on_error": [
+            "MFGCarbinNeedReStock_OnError"
         ]
     },
     "MFGCarbinNeedTake": {
-        "timeout": 3000,
-        "on_error": [
-            "EntryMFGCarbinSuccess_OnError"
-        ],
         "desc": "[制造舱·需要领取] 识别需要领取的奖励，点击领取",
         "recognition": {
             "type": "And",
@@ -209,9 +205,13 @@
             "type": "Click"
         },
         "post_delay": 0,
+        "timeout": 3000,
         "rate_limit": 0,
         "next": [
             "MFGCarbinNeedTakeClose"
+        ],
+        "on_error": [
+            "EntryMFGCarbinSuccess_OnError"
         ]
     },
     "MFGCarbinNeedTake_OnError": {
@@ -237,10 +237,6 @@
         ]
     },
     "MFGCarbinNeedTakeClose": {
-        "timeout": 3000,
-        "on_error": [
-            "MFGCarbinNeedTake_OnError"
-        ],
         "desc": "[制造舱·需要领取] 点击领取完成界面确认按钮",
         "recognition": {
             "type": "And",
@@ -264,11 +260,15 @@
         "pre_delay": 0,
         "action": "Click",
         "post_delay": 0,
+        "timeout": 3000,
         "rate_limit": 0,
         "next": [
             "MFGCarbinNeedReStock",
             "MFGCarbinNeedAssist",
             "Exit_MFG_Cabin"
+        ],
+        "on_error": [
+            "MFGCarbinNeedTake_OnError"
         ]
     },
     "MFGCarbinNeedAssist": {
@@ -332,10 +332,6 @@
         ]
     },
     "MFGCarbinNeedAssistUseAssist": {
-        "timeout": 3000,
-        "on_error": [
-            "MFGCarbinNeedAssist_OnError"
-        ],
         "desc": "[制造舱·需要助力] 点击使用助力",
         "recognition": {
             "type": "And",
@@ -352,10 +348,14 @@
             "type": "Click"
         },
         "post_delay": 0,
+        "timeout": 3000,
         "rate_limit": 0,
         "next": [
             "MFGCarbinNeedAssistAssistMAX",
             "MFGCarbinNeedAssistConfirm"
+        ],
+        "on_error": [
+            "MFGCarbinNeedAssist_OnError"
         ]
     },
     "MFGCarbinNeedAssistUseAssist_OnError": {
@@ -382,10 +382,6 @@
         ]
     },
     "MFGCarbinNeedAssistAssistMAX": {
-        "timeout": 3000,
-        "on_error": [
-            "MFGCarbinNeedAssistUseAssist_OnError"
-        ],
         "desc": "[制造舱·需要助力] 点击最大助力",
         "recognition": {
             "type": "TemplateMatch",
@@ -406,9 +402,13 @@
             "type": "Click"
         },
         "post_delay": 0,
+        "timeout": 3000,
         "rate_limit": 0,
         "next": [
             "MFGCarbinNeedAssistConfirm"
+        ],
+        "on_error": [
+            "MFGCarbinNeedAssistUseAssist_OnError"
         ]
     },
     "MFGCarbinNeedAssistConfirm": {
@@ -456,10 +456,6 @@
         ]
     },
     "MFGCarbinNeedAssistClose": {
-        "timeout": 3000,
-        "on_error": [
-            "MFGCarbinNeedAssistConfirm_OnError"
-        ],
         "desc": "[制造舱·需要助力] 点击助力使用完成界面关闭按钮",
         "recognition": {
             "type": "And",
@@ -474,9 +470,13 @@
             "type": "Click"
         },
         "post_delay": 0,
+        "timeout": 3000,
         "rate_limit": 0,
         "next": [
             "Exit_MFG_Cabin"
+        ],
+        "on_error": [
+            "MFGCarbinNeedAssistConfirm_OnError"
         ]
     },
     "Exit_MFG_Cabin": {
