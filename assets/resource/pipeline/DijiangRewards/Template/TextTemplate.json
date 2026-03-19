@@ -339,5 +339,22 @@
                 ]
             }
         }
+    },
+    "AssistText": {
+        "desc": "识别生产助力标签文本",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    977,
+                    0,
+                    303,
+                    157
+                ],
+                "expected": [
+                    "生产助力"
+                ]
+            }
+        }
     }
 }
