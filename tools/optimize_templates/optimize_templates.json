@@ -570,5 +570,7 @@
     "resource/image/EssenceFilter/ThumbLock": "7cabefcdc366420b523f44ea133992adb8c93f2940b8b695ab1366c2dfb0124e",
     "resource/image/EssenceFilter/ThumbDiscard": "9e8b571e9aeee53a85a2cc8d636aee0817d153880f762c38884467a2c2824cf3",
     "resource/image/SceneManager/ValuableEntry": "640f098bf5591754d9bd83bebb84580deade0b488c540e41b6eb2402abadd09f",
-    "resource/image/Weapon/UpgradeMaterialsDelete": "fd9543437c65fa89990c3c09a90a48ddca3c197c5de4ebfbef1a48499d61884c"
+    "resource/image/Weapon/UpgradeMaterialsDelete": "fd9543437c65fa89990c3c09a90a48ddca3c197c5de4ebfbef1a48499d61884c",
+    "resource/image/AutoStockpile/AutoStockpileKettle": "605e91bf825a5bbd7d31d0df350938fdf9c02c61d33d22a3b91c13d5894b1360",
+    "resource/image/AutoStockpile/AutoStockpileLocked": "b4f8403516785dcb171419ce0271ca23a27698e0d93639d20645ce21a41a4d13"
 }
