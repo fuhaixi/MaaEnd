@@ -195,7 +195,7 @@
         }
     },
     "AutoUseSpMedicationAdd": {
-        "desc": "",
+        "desc": "点击添加按钮",
         "recognition": {
             "type": "TemplateMatch",
             "param": {
@@ -205,8 +205,14 @@
                     37,
                     37
                 ],
-                "template": "Valuables/AddButton.png",
-                "threshold": 0.8
+                "template": [
+                    "Valuables/AddButton.png",
+                    "Valuables/AddButtonHover.png"
+                ],
+                "threshold": [
+                    0.8,
+                    0.9
+                ]
             }
         },
         "action": "Click",
@@ -216,7 +222,7 @@
         ]
     },
     "AutoUseSpMedicationCantAdd": {
-        "desc": "",
+        "desc": "无法添加",
         "recognition": {
             "type": "TemplateMatch",
             "param": {
