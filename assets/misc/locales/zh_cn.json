@@ -145,7 +145,7 @@
     "option.ClueSetting.label": "线索设置",
     "option.ClueSetting.description": "启用后可以更改线索规则",
     "option.SelectToGrow.label": "种植目标",
-    "option.SelectToGrow.description": "MAE 会自动种植对应目标",
+    "option.SelectToGrow.description": "会自动种植对应目标",
     "option.SelectToGrow.cases.DoNothing.label": "不种植",
     "option.SelectToGrow.cases.GrowAgain.label": "再次种植",
     "option.SelectToGrow.cases.Any.label": "任意",

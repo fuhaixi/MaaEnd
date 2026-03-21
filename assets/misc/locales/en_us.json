@@ -145,7 +145,7 @@
     "option.ClueSetting.label": "Clue Settings",
     "option.ClueSetting.description": "When enabled, allows you to change clue handling rules.",
     "option.SelectToGrow.label": "Growth Target",
-    "option.SelectToGrow.description": "MAE will automatically plant the selected target.",
+    "option.SelectToGrow.description": "Will automatically plant the selected target.",
     "option.SelectToGrow.cases.DoNothing.label": "Do Nothing",
     "option.SelectToGrow.cases.Any.label": "Any",
     "option.SelectToGrow.cases.GrowAgain.label": "Grow Again",

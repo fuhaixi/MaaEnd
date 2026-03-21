@@ -145,7 +145,7 @@
     "option.ClueSetting.label": "線索設定",
     "option.ClueSetting.description": "啟用後可以更改線索規則",
     "option.SelectToGrow.label": "種植目標",
-    "option.SelectToGrow.description": "MAE 會自動種植對應目標",
+    "option.SelectToGrow.description": "會自動種植對應目標",
     "option.SelectToGrow.cases.DoNothing.label": "不種植",
     "option.SelectToGrow.cases.Any.label": "任意",
     "option.SelectToGrow.cases.GrowAgain.label": "再次種植",
