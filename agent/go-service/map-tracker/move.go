@@ -71,7 +71,7 @@ var mapTrackerMoveDefaultParam = MapTrackerMoveParam{
 	RotationLowerThreshold: 7.5,
 	RotationUpperThreshold: 60.0,
 	SprintThreshold:        20.0,
-	StuckThreshold:         2000,
+	StuckThreshold:         2500,
 	StuckTimeout:           10000,
 }
 
@@ -233,11 +233,11 @@ func (a *MapTrackerMove) Run(ctx *maa.Context, arg *maa.CustomActionArg) bool {
 					nextX, nextY := param.Path[i+1][0], param.Path[i+1][1]
 					nextTargetRot := calcTargetRotation(curX, curY, nextX, nextY)
 					nextDeltaRot := calcDeltaRotation(rot, nextTargetRot)
-					// Foresee rotation adjustment
-					foreseeDeltaRot := float64(rawDeltaRot) / 2.0
+					// Foresee rotation adjustment for the next target
 					if math.Abs(float64(nextDeltaRot)) > param.RotationUpperThreshold {
 						ca.SetPlayerMovement(control.MovementWalk)
 					}
+					foreseeDeltaRot := float64(nextDeltaRot) * 0.382
 					ca.RotateCamera(int(foreseeDeltaRot*rotationSpeed), 0)
 				}
 			}
@@ -270,8 +270,8 @@ func (a *MapTrackerMove) Run(ctx *maa.Context, arg *maa.CustomActionArg) bool {
 
 			log.Debug().Float64("curX", curX).Float64("curY", curY).Int("curRot", rot).Float64("dist", dist).Int("targetRot", targetRot).Msg("Navigating to target")
 
-			// Check Stuck
-			if prevLocation != nil && math.Hypot(prevLocation[0]-curX, prevLocation[1]-curY) < 1.0 {
+			// Check stuck
+			if prevLocation != nil && math.Hypot(prevLocation[0]-curX, prevLocation[1]-curY) < 2.0 {
 				deltaLocationMs := loopStartTime.Sub(prevLocationTime).Milliseconds()
 				if deltaLocationMs > param.StuckTimeout {
 					log.Error().Msg("Stuck for too long, stopping task")
@@ -355,9 +355,6 @@ func (a *MapTrackerMove) Run(ctx *maa.Context, arg *maa.CustomActionArg) bool {
 					ca.AggressivelyResetCamera()
 				}
 			}
-			loopEndTime := time.Now()
-			loopTotalElapsed := loopEndTime.Sub(loopStartTime)
-			log.Info().Int("index", i).Dur("elapsed", loopElapsed).Float64("FPS", 1.0/loopTotalElapsed.Seconds()).Msg("Finished navigating to target point")
 		}
 		// End of loop, one target reached
 	}
@@ -514,7 +511,7 @@ func doInfer(ctx *maa.Context, ctrl *maa.Controller, param *MapTrackerMoveParam)
 		return nil, err
 	}
 
-	resultJson, hit := mapTrackerInferRunner.Run(ctx, &maa.CustomRecognitionArg{
+	resultWrapper, hit := mapTrackerInferRunner.Run(ctx, &maa.CustomRecognitionArg{
 		TaskID:                 taskDetail.ID,
 		CurrentTaskName:        taskDetail.Entry,
 		CustomRecognitionName:  "MapTrackerInfer",
@@ -527,20 +524,16 @@ func doInfer(ctx *maa.Context, ctrl *maa.Controller, param *MapTrackerMoveParam)
 		log.Error().Msg("Location inference not hit")
 		return nil, fmt.Errorf("location inference not hit")
 	}
-	if resultJson == nil || resultJson.Detail == "" {
+	if resultWrapper == nil || resultWrapper.Detail == "" {
 		log.Error().Msg("Location inference result is empty")
 		return nil, fmt.Errorf("location inference result is empty")
 	}
 
 	// Extract result
 	var result MapTrackerInferResult
-	if err := json.Unmarshal([]byte(resultJson.Detail), &result); err != nil {
+	if err := json.Unmarshal([]byte(resultWrapper.Detail), &result); err != nil {
 		log.Error().Err(err).Msg("Failed to unmarshal MapTrackerInferResult")
 		return nil, err
-	}
-	if result.MapName == "None" {
-		log.Error().Msg("Map not recognized in inference result")
-		return nil, fmt.Errorf("map not recognized in inference result")
 	}
 
 	return &result, nil
