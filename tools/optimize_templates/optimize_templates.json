@@ -575,5 +575,6 @@
     "resource/image/AutoStockpile/AutoStockpileLocked": "b4f8403516785dcb171419ce0271ca23a27698e0d93639d20645ce21a41a4d13",
     "resource/image/SceneManager/NoticeRewardsIcon3": "994abde3377303188ddc42dea28ef7921ab634915b75edb44843a5825eba1a55",
     "resource/image/SceneManager/NoticeRewardsIcon2": "485a262b36a49b06d153fa5eaddfc70c93ec1033aa9f734f4e5e5d1785e130ca",
-    "resource/image/ClaimDijiangRewards/ItemMaxButton": "68fc866718b35aa10582001cad7b9de2dd73c4da2bb96b749abd58a1d2736a80"
+    "resource/image/ClaimDijiangRewards/ItemMaxButton": "68fc866718b35aa10582001cad7b9de2dd73c4da2bb96b749abd58a1d2736a80",
+    "resource/image/ClaimDijiangRewards/SendCluesBackButton": "d69d01089ef297954c1d4988a7fd97794b542c3a07798c5b8c12e0b2144fd65e"
 }
