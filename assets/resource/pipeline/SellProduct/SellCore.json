@@ -24,11 +24,11 @@
         "all_of": [
             "SellProductInOutpost"
         ],
+        "pre_delay": 0,
         // 仅在售卖流程开始时尝试更换一次货品
         "anchor": {
             "SellProductChangeGoodsAtBeginning": ""
         },
-        "pre_delay": 0,
         "post_delay": 0,
         "rate_limit": 0,
         "next": [

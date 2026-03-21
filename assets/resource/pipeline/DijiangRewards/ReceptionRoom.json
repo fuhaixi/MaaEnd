@@ -59,8 +59,8 @@
                 "box_index": 1
             }
         },
-        "pre_delay": 0,
         "pre_wait_freezes": 200,
+        "pre_delay": 0,
         "action": {
             "type": "Click"
         },
@@ -117,10 +117,10 @@
                 "box_index": 2
             }
         },
+        "pre_delay": 0,
         "action": {
             "type": "Click"
         },
-        "pre_delay": 0,
         "post_delay": 0,
         "rate_limit": 0,
         "next": [
@@ -171,8 +171,9 @@
             "CloseButtonType1"
         ],
         "pre_delay": 0,
-        "post_delay": 0,
-        "rate_limit": 0,
+        "action": {
+            "type": "Click"
+        },
         "post_wait_freezes": {
             "time": 200,
             "target": [
@@ -182,9 +183,8 @@
                 150
             ]
         },
-        "action": {
-            "type": "Click"
-        }
+        "post_delay": 0,
+        "rate_limit": 0
     },
     "ReceptionRoomSendCluesClueCollectionFull": {
         "desc": "[会客室·赠送线索] 收集线索满了",
@@ -218,8 +218,6 @@
             "CloseButtonType1"
         ],
         "pre_delay": 0,
-        "post_delay": 0,
-        "rate_limit": 0,
         "action": {
             "type": "Click",
             "param": {
@@ -235,6 +233,8 @@
                 150
             ]
         },
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "ReceptionRoomSendCluesEntry"
         ]
@@ -306,7 +306,6 @@
                 ]
             }
         },
-        "pre_delay": 0,
         "pre_wait_freezes": {
             "time": 200,
             "target": [
@@ -316,6 +315,7 @@
                 150
             ]
         },
+        "pre_delay": 0,
         "post_delay": 0,
         "rate_limit": 0,
         "next": [
@@ -351,8 +351,12 @@
             "CloseButtonType1"
         ],
         "pre_delay": 0,
-        "post_delay": 0,
-        "rate_limit": 0,
+        "action": {
+            "type": "Click",
+            "param": {
+                "contact": 0
+            }
+        },
         "post_wait_freezes": {
             "time": 200,
             "target": [
@@ -362,12 +366,8 @@
                 150
             ]
         },
-        "action": {
-            "type": "Click",
-            "param": {
-                "contact": 0
-            }
-        }
+        "post_delay": 0,
+        "rate_limit": 0
     },
     "ReceptionRoomCollectClues": {
         "desc": "[会客室·线索] 识别是否有可收集的线索",
@@ -474,9 +474,6 @@
         "action": {
             "type": "Click"
         },
-        "post_delay": 0,
-        "timeout": 5000,
-        "rate_limit": 0,
         "post_wait_freezes": {
             "time": 1000,
             "target": [
@@ -486,6 +483,9 @@
                 300
             ]
         },
+        "post_delay": 0,
+        "timeout": 5000,
+        "rate_limit": 0,
         "next": [
             "ReceptionRoomSendCluesClickSend"
         ]
@@ -530,6 +530,13 @@
                 ]
             }
         },
+        "pre_delay": 0,
+        "action": {
+            "type": "Click",
+            "param": {
+                "contact": 0
+            }
+        },
         "post_wait_freezes": {
             "time": 200,
             "target": [
@@ -538,13 +545,6 @@
                 300,
                 100
             ]
-        },
-        "pre_delay": 0,
-        "action": {
-            "type": "Click",
-            "param": {
-                "contact": 0
-            }
         },
         "post_delay": 0,
         "rate_limit": 0
@@ -581,15 +581,6 @@
     },
     "ReceptionRoomSendCluesViewIn": {
         "desc": "[会客室·线索] 进入赠予界面",
-        "pre_wait_freezes": {
-            "time": 1000,
-            "target": [
-                -450,
-                -300,
-                450,
-                300
-            ]
-        },
         "recognition": {
             "type": "OCR",
             "param": {
@@ -607,6 +598,15 @@
                     "譲り渡す"
                 ]
             }
+        },
+        "pre_wait_freezes": {
+            "time": 1000,
+            "target": [
+                -450,
+                -300,
+                450,
+                300
+            ]
         },
         "pre_delay": 0,
         "post_delay": 0,
@@ -652,7 +652,6 @@
                 "contact": 0
             }
         },
-        "post_delay": 0,
         "post_wait_freezes": {
             "time": 200,
             "target": [
@@ -662,6 +661,7 @@
                 80
             ]
         },
+        "post_delay": 0,
         "rate_limit": 0
     },
     "ReceptionRoomSetClues": {
@@ -856,8 +856,9 @@
             "CloseButtonType1"
         ],
         "pre_delay": 0,
-        "post_delay": 0,
-        "rate_limit": 0,
+        "action": {
+            "type": "Click"
+        },
         "post_wait_freezes": {
             "time": 200,
             "target": [
@@ -867,9 +868,8 @@
                 150
             ]
         },
-        "action": {
-            "type": "Click"
-        }
+        "post_delay": 0,
+        "rate_limit": 0
     },
     "ReceptionRoomExit": {
         "desc": "[会客室·退出] 识别会客室界面，点击返回退出",
@@ -881,8 +881,6 @@
         "action": {
             "type": "Click"
         },
-        "post_delay": 0,
-        "rate_limit": 0,
         "post_wait_freezes": {
             "time": 200,
             "target": [
@@ -891,6 +889,8 @@
                 300,
                 100
             ]
-        }
+        },
+        "post_delay": 0,
+        "rate_limit": 0
     }
 }

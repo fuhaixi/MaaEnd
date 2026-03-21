@@ -27,17 +27,17 @@
                     720
                 ],
                 "template": "EssenceFilter/EssenceGeneral.png",
+                "green_mask": true,
                 "method": 5,
-                "threshold": 0.7,
-                "green_mask": true
+                "threshold": 0.7
             }
-        },
-        "focus": {
-            "Node.Recognition.Successed": "识别到基质，开始筛选并锁定有用的"
         },
         "next": [
             "EssenceFilterAfterBattleInit"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Successed": "识别到基质，开始筛选并锁定有用的"
+        }
     },
     "EssenceFilterAfterBattleInit": {
         "desc": "初始化：加载数据与预设[刷完基质版]",
@@ -82,17 +82,17 @@
             "future_promising_min_total": 6,
             //是否锁上未来可期的基质
             "lock_future_promising": false,
-            //是否保留高等级技能3的实用基质   
+            //是否保留高等级技能3的实用基质
             "keep_slot3_level3_practical": false,
             //“高等级”对应多少技能等级
             "slot3_min_level": 3,
-            //是否锁上高等级技能3的实用基质  
+            //是否锁上高等级技能3的实用基质
             "lock_slot3_practical": false,
             //是否丢弃不匹配的基质
             "discard_unmatched": false,
-            //是否输出基质规划（这个分支任务暂时用不了）  
+            //是否输出基质规划（这个分支任务暂时用不了）
             "export_calculator_script": false,
-            //是否跳过上锁基质（这个分支任务暂时用不了）  
+            //是否跳过上锁基质（这个分支任务暂时用不了）
             "skip_locked_row": false
         }
     },
@@ -117,8 +117,8 @@
         "action": {
             "type": "Click"
         },
-        "post_delay": 0,
         "post_wait_freezes": 200,
+        "post_delay": 0,
         "next": [
             "AutoEssenceOnSuccess"
         ]

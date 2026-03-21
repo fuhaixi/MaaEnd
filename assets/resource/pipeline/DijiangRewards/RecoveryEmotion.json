@@ -97,7 +97,6 @@
         "all_of": [
             "RecoveryEmotionAssistWindowTitle"
         ],
-        "pre_delay": 0,
         "pre_wait_freezes": {
             "time": 100,
             "target": "RecoveryEmotionAssistWindowTitle",
@@ -108,6 +107,7 @@
                 250
             ]
         },
+        "pre_delay": 0,
         "post_delay": 0,
         "rate_limit": 0,
         "next": [
