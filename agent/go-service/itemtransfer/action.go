@@ -219,7 +219,7 @@ func hoverAndOCR(ctx *maa.Context, tasker *maa.Tasker, ctrl *maa.Controller, x, 
 	}
 
 	ctrl.PostTouchMove(0, int32(x), int32(y), 0).Wait()
-	time.Sleep(2 * time.Second)
+	time.Sleep(1500 * time.Millisecond)
 
 	if tasker.Stopping() {
 		return ""
@@ -341,6 +341,9 @@ func binarySearchOnPage(ctx *maa.Context, tasker *maa.Tasker, ctrl *maa.Controll
 		return nil
 	}
 
+	const maxConsecutiveCategoryMisses = 3
+	consecutiveMisses := 0
+
 	first := &items[0]
 	name := hoverAndOCR(ctx, tasker, ctrl, first.CenterX, first.CenterY)
 
@@ -359,6 +362,9 @@ func binarySearchOnPage(ctx *maa.Context, tasker *maa.Tasker, ctrl *maa.Controll
 				Str("ocr_name", name).Int("ocr_idx", ocrIdx).Int("target_idx", targetIdx).
 				Msg("first cell already past target, item not on this page")
 			return nil
+		}
+		if ocrIdx < 0 {
+			consecutiveMisses++
 		}
 	}
 
@@ -390,12 +396,21 @@ func binarySearchOnPage(ctx *maa.Context, tasker *maa.Tasker, ctrl *maa.Controll
 			ocrIdx = fuzzyIndexOf(categoryOrder, name)
 		}
 		if ocrIdx < 0 {
+			consecutiveMisses++
+			if consecutiveMisses >= maxConsecutiveCategoryMisses {
+				log.Warn().Str("component", componentName).
+					Str("ocr_name", name).Int("consecutive_misses", consecutiveMisses).
+					Msg("too many consecutive category misses, likely wrong category page")
+				return nil
+			}
 			lo = mid + 1
 			log.Warn().Str("component", componentName).
 				Str("ocr_name", name).Int("mid", mid).
 				Msg("OCR'd item not in category order, advancing forward")
 			continue
 		}
+
+		consecutiveMisses = 0
 
 		log.Info().Str("component", componentName).
 			Str("ocr_name", name).Int("ocr_idx", ocrIdx).Int("target_idx", targetIdx).
