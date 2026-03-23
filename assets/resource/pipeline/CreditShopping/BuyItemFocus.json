@@ -1,9 +1,6 @@
 {
     "CreditShoppingBuyFirstItemOCR_ArsenalTicket": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -16,20 +13,20 @@
             "Arsenal Ticket",
             "武庫配給"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArsenalTicket"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArsenalTicket"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_Oroberyl": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -42,20 +39,20 @@
             "Oroberyl",
             "赤晶玉"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Oroberyl"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Oroberyl"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_TCreds": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -68,20 +65,20 @@
             "T-Creds",
             "折金券"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.TCreds"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.TCreds"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_ElementaryCombatRecord": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -94,20 +91,20 @@
             "Elementary Combat Record",
             "初級作戦記録"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCombatRecord"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCombatRecord"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_IntermediateCombatRecord": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -120,20 +117,20 @@
             "Intermediate Combat Record",
             "中級作戦記録"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.IntermediateCombatRecord"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.IntermediateCombatRecord"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_ElementaryCognitiveCarrier": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -146,20 +143,20 @@
             "Elementary Cognitive Carrier",
             "初級認識媒体"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCognitiveCarrier"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCognitiveCarrier"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_ArmsInspector": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -172,20 +169,20 @@
             "Arms Inspector",
             "武器検査ユニット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsInspector"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsInspector"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_ArmsINSPKit": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -198,20 +195,20 @@
             "Arms INSP Kit",
             "武器検査セット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsINSPKit"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsINSPKit"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_CastDie": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -224,20 +221,20 @@
             "Cast Die",
             "硬質金型"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.CastDie"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.CastDie"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_HeavyCastDie": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -250,20 +247,20 @@
             "Heavy Cast Die",
             "重硬質金型"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.HeavyCastDie"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.HeavyCastDie"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_Protodisk": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -276,20 +273,20 @@
             "Protodisk",
             "協約ディスク"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protodisk"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protodisk"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_Protoset": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -302,20 +299,20 @@
             "Protoset",
             "協約ディスクセット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoset"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoset"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_Protoprism": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -328,20 +325,20 @@
             "Protoprism",
             "協約角柱"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoprism"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoprism"
+        }
     },
     "CreditShoppingBuyFirstItemOCR_Protohedron": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -354,20 +351,20 @@
             "Protohedron",
             "協約角柱セット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protohedron"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyFirstItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protohedron"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_ArsenalTicket": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -380,20 +377,20 @@
             "Arsenal Ticket",
             "武庫配給"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArsenalTicket"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArsenalTicket"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_Oroberyl": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -406,20 +403,20 @@
             "Oroberyl",
             "赤晶玉"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Oroberyl"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Oroberyl"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_TCreds": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -432,20 +429,20 @@
             "T-Creds",
             "折金券"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.TCreds"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.TCreds"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_ElementaryCombatRecord": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -458,20 +455,20 @@
             "Elementary Combat Record",
             "初級作戦記録"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCombatRecord"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCombatRecord"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_IntermediateCombatRecord": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -484,20 +481,20 @@
             "Intermediate Combat Record",
             "中級作戦記録"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.IntermediateCombatRecord"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.IntermediateCombatRecord"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_ElementaryCognitiveCarrier": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -510,20 +507,20 @@
             "Elementary Cognitive Carrier",
             "初級認識媒体"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCognitiveCarrier"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCognitiveCarrier"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_ArmsInspector": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -536,20 +533,20 @@
             "Arms Inspector",
             "武器検査ユニット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsInspector"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsInspector"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_ArmsINSPKit": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -562,20 +559,20 @@
             "Arms INSP Kit",
             "武器検査セット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsINSPKit"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsINSPKit"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_CastDie": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -588,20 +585,20 @@
             "Cast Die",
             "硬質金型"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.CastDie"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.CastDie"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_HeavyCastDie": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -614,20 +611,20 @@
             "Heavy Cast Die",
             "重硬質金型"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.HeavyCastDie"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.HeavyCastDie"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_Protodisk": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -640,20 +637,20 @@
             "Protodisk",
             "協約ディスク"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protodisk"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protodisk"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_Protoset": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -666,20 +663,20 @@
             "Protoset",
             "協約ディスクセット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoset"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoset"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_Protoprism": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -692,20 +689,20 @@
             "Protoprism",
             "協約角柱"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoprism"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoprism"
+        }
     },
     "CreditShoppingBuyNormalItemWithDiscountOCR_Protohedron": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -718,20 +715,20 @@
             "Protohedron",
             "協約角柱セット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protohedron"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyNormalItemWithDiscount"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protohedron"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_ArsenalTicket": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -744,20 +741,20 @@
             "Arsenal Ticket",
             "武庫配給"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArsenalTicket"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArsenalTicket"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_Oroberyl": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -770,20 +767,20 @@
             "Oroberyl",
             "赤晶玉"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Oroberyl"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Oroberyl"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_TCreds": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -796,20 +793,20 @@
             "T-Creds",
             "折金券"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.TCreds"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.TCreds"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_ElementaryCombatRecord": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -822,20 +819,20 @@
             "Elementary Combat Record",
             "初級作戦記録"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCombatRecord"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCombatRecord"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_IntermediateCombatRecord": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -848,20 +845,20 @@
             "Intermediate Combat Record",
             "中級作戦記録"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.IntermediateCombatRecord"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.IntermediateCombatRecord"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_ElementaryCognitiveCarrier": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -874,20 +871,20 @@
             "Elementary Cognitive Carrier",
             "初級認識媒体"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCognitiveCarrier"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ElementaryCognitiveCarrier"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_ArmsInspector": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -900,20 +897,20 @@
             "Arms Inspector",
             "武器検査ユニット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsInspector"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsInspector"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_ArmsINSPKit": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -926,20 +923,20 @@
             "Arms INSP Kit",
             "武器検査セット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsINSPKit"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.ArmsINSPKit"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_CastDie": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -952,20 +949,20 @@
             "Cast Die",
             "硬質金型"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.CastDie"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.CastDie"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_HeavyCastDie": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -978,20 +975,20 @@
             "Heavy Cast Die",
             "重硬質金型"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.HeavyCastDie"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.HeavyCastDie"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_Protodisk": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -1004,20 +1001,20 @@
             "Protodisk",
             "協約ディスク"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protodisk"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protodisk"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_Protoset": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -1030,20 +1027,20 @@
             "Protoset",
             "協約ディスクセット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoset"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoset"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_Protoprism": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -1056,20 +1053,20 @@
             "Protoprism",
             "協約角柱"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoprism"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protoprism"
+        }
     },
     "CreditShoppingBuyBlacklistItemOCR_Protohedron": {
         "recognition": "OCR",
-        "post_delay": 0,
-        "pre_delay": 0,
-        "rate_limit": 0,
         "roi": [
             406,
             134,
@@ -1082,13 +1079,16 @@
             "Protohedron",
             "協約角柱セット"
         ],
-        "focus": {
-            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protohedron"
-        },
+        "pre_delay": 0,
+        "post_delay": 0,
+        "rate_limit": 0,
         "next": [
             "CreditShoppingBuyFailed",
             "CreditShoppingBuyConfirm",
             "CreditShoppingBuyBlacklistItem"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "$task.CreditShopping.buy_item.Protohedron"
+        }
     }
 }

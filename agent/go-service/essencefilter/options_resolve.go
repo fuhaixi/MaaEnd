@@ -23,8 +23,8 @@ type EssenceFilterOptionsPatch struct {
 	Slot3MinLevel            *int  `json:"slot3_min_level"`
 	LockSlot3Practical       *bool `json:"lock_slot3_practical"`
 
-	DiscardUnmatched       *bool `json:"discard_unmatched"`
-	ExportCalculatorScript *bool `json:"export_calculator_script"`
+	DiscardUnmatched       *bool   `json:"discard_unmatched"`
+	ExportCalculatorScript *bool   `json:"export_calculator_script"`
 	SkipLockedRow          *bool   `json:"skip_locked_row"`
 	InputLanguage          *string `json:"input_language"`
 }

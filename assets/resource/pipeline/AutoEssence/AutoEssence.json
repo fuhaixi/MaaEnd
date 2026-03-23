@@ -115,8 +115,8 @@
     "AutoEssenceReadyToStart": {
         "desc": "点击了激发的大世界按钮之后的守卫节点",
         "pre_delay": 0,
-        "post_delay": 0,
         "post_wait_freezes": 500,
+        "post_delay": 0,
         "next": [
             "AutoEssenceMistakeFactoryDevice",
             "AutoEssenceClickEssenceStartButton"
@@ -291,12 +291,12 @@
                 "green_mask": true
             }
         },
-        "pre_delay": 0,
-        "post_delay": 0,
         "inverse": true,
+        "pre_delay": 0,
         "anchor": {
             "AutoEssenceAfterMoveToTriggerPoint": "AutoEssenceClickObtainButtonPre"
         },
+        "post_delay": 0,
         "next": [
             "[Anchor]AutoEssenceMoveToTriggerPoint"
         ],

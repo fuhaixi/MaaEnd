@@ -143,9 +143,9 @@
                     255,
                     255
                 ],
+                "connected": true,
                 "count": 10,
                 "order_by": "Vertical",
-                "connected": true,
                 "index": 0
             }
         },

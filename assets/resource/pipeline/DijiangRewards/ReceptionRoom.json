@@ -471,7 +471,6 @@
     },
     "ReceptionRoomSendCluesClickSend": {
         "desc": "[会客室·线索] 在赠予界面点击发送按钮确认发送",
-        "pre_delay": 0,
         "recognition": {
             "type": "Or",
             "param": {
@@ -481,6 +480,7 @@
                 ]
             }
         },
+        "pre_delay": 0,
         "action": {
             "type": "Click"
         },
@@ -523,8 +523,8 @@
                     200,
                     255
                 ],
-                "count": 10,
-                "connected": true
+                "connected": true,
+                "count": 10
             }
         }
     },
@@ -684,8 +684,8 @@
         "action": {
             "type": "Click"
         },
-        "post_delay": 0,
         "post_wait_freezes": 200,
+        "post_delay": 0,
         "rate_limit": 0,
         "next": [
             "ReceptionRoomCollectCluesExit"
