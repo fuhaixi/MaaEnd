@@ -362,11 +362,8 @@
                         },
                         "EssenceFilterAfterBattleIsflawless": {
                             "next": [
-                                "EssenceFilterAfterBattleCheckItemSlot1"
-                            ],
-                            "focus": {
-                                "Node.Recognition.Succeeded": "是无暇基质，开始识别"
-                            }
+                                "EssenceAfterBattleYellowSlot1"
+                            ]
                         }
                     }
                 },
@@ -381,10 +378,7 @@
                         "EssenceFilterAfterBattleIsflawless": {
                             "next": [
                                 "EssenceFilterAfterBattleRowNextItem"
-                            ],
-                            "focus": {
-                                "Node.Recognition.Succeeded": "是无暇基质,跳过"
-                            }
+                            ]
                         }
                     }
                 }
@@ -405,11 +399,8 @@
                         },
                         "EssenceFilterAfterBattleIsPure": {
                             "next": [
-                                "EssenceFilterAfterBattleCheckItemSlot1"
-                            ],
-                            "focus": {
-                                "Node.Recognition.Succeeded": "是高纯基质，开始识别"
-                            }
+                                "EssenceAfterBattleYellowSlot1"
+                            ]
                         }
                     }
                 },
@@ -424,10 +415,7 @@
                         "EssenceFilterAfterBattleIsPure": {
                             "next": [
                                 "EssenceFilterAfterBattleRowNextItem"
-                            ],
-                            "focus": {
-                                "Node.Recognition.Succeeded": "是高纯基质,跳过"
-                            }
+                            ]
                         }
                     }
                 }
