@@ -9,16 +9,26 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func getSelectionConfigFromNode(ctx *maa.Context, nodeName string) (SelectionConfig, error) {
-	region, _ := resolveGoodsRegion(ctx)
+func getSelectionConfigFromNode(ctx *maa.Context, nodeName string, region string) (SelectionConfig, AbortReason, error) {
+	if region == "" {
+		return SelectionConfig{}, AbortReasonSelectionConfigInvalidFatal, fmt.Errorf("region is empty")
+	}
 
 	node, err := ctx.GetNode(nodeName)
 	if err != nil {
-		log.Error().Err(err).Str("component", "autostockpile").Str("node", nodeName).Msg("failed to get node")
-		return SelectionConfig{}, err
+		log.Error().Err(err).Str("component", autoStockpileComponent).Str("node", nodeName).Msg("failed to get node")
+		return SelectionConfig{}, AbortReasonSelectionConfigInvalidFatal, err
 	}
 
-	return parseSelectionConfigFromAttach(node.Attach, region)
+	cfg, err := parseSelectionConfigFromAttach(node.Attach, region)
+	if err != nil {
+		if isThresholdConfigError(err) {
+			return SelectionConfig{}, AbortReasonThresholdConfigInvalidFatal, err
+		}
+		return SelectionConfig{}, AbortReasonSelectionConfigInvalidFatal, err
+	}
+
+	return cfg, AbortReasonNone, nil
 }
 
 func parseSelectionConfigFromAttach(attach map[string]any, region string) (SelectionConfig, error) {
@@ -47,9 +57,9 @@ func parseSelectionConfigFromAttach(attach map[string]any, region string) (Selec
 
 	effectiveJSON, err := json.Marshal(cfg)
 	if err != nil {
-		log.Warn().Err(err).Str("component", "autostockpile").Str("region", region).Msg("failed to marshal effective config")
+		log.Warn().Err(err).Str("component", autoStockpileComponent).Str("region", region).Msg("failed to marshal effective config")
 	} else {
-		log.Info().Str("component", "autostockpile").Str("region", region).Str("attach", string(attachJSON)).Str("effective_config", string(effectiveJSON)).Msg("attach config loaded")
+		log.Info().Str("component", autoStockpileComponent).Str("region", region).Str("attach", string(attachJSON)).Str("effective_config", string(effectiveJSON)).Msg("attach config loaded")
 	}
 
 	return cfg, nil
@@ -82,12 +92,19 @@ func applyRegionScopedConfig(attach map[string]json.RawMessage, region string, c
 	if err != nil {
 		return err
 	}
-	if len(priceLimits) == 0 {
-		return nil
+	if len(priceLimits) > 0 {
+		cfg.PriceLimits = priceLimits
+		cfg.FallbackThreshold = minPositiveThreshold(priceLimits)
 	}
 
-	cfg.PriceLimits = priceLimits
-	cfg.FallbackThreshold = minPositiveThreshold(priceLimits)
+	reserveStockBill, found, err := collectRegionReserveStockBill(attach, region)
+	if err != nil {
+		return err
+	}
+	if found {
+		cfg.ReserveStockBill = reserveStockBill
+	}
+
 	return nil
 }
 
@@ -115,4 +132,28 @@ func collectRegionPriceLimits(attach map[string]json.RawMessage, region string) 
 	}
 
 	return priceLimits, nil
+}
+
+// collectRegionReserveStockBill 从扁平 attach 中提取当前地区的库存账单保留配置。
+// 查找形如 reserve_stock_bill_ValleyIV 的 key，将其值乘以 10000 转换为实际数值。
+func collectRegionReserveStockBill(attach map[string]json.RawMessage, region string) (value int, found bool, err error) {
+	key := fmt.Sprintf("reserve_stock_bill_%s", region)
+	rawValue, exists := attach[key]
+	if !exists {
+		return 0, false, nil
+	}
+
+	// 使用 parsePriceLimitValue 解析 int 或 string 格式
+	parsedValue, err := parsePriceLimitValue(rawValue)
+	if err != nil {
+		return 0, true, fmt.Errorf("%s: %w", key, err)
+	}
+
+	// 如果值 ≤ 0，返回 0
+	if parsedValue <= 0 {
+		return 0, true, nil
+	}
+
+	// 将用户输入（"万"单位）转换为实际数值，乘以 10000
+	return parsedValue * 10000, true, nil
 }

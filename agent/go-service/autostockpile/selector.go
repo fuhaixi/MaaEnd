@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	swipeMaxNodeName    = "AutoStockpileSwipeMax"
-	noCandidateNodeName = "AutoStockpileNoCandidate"
+	swipeMaxNodeName = "AutoStockpileSwipeMax"
+	skipNodeName     = "AutoStockpileSkip"
 )
 
 type candidateGoods struct {
@@ -27,16 +27,6 @@ func (a *SelectItemAction) Run(ctx *maa.Context, arg *maa.CustomActionArg) bool 
 		log.Error().
 			Str("component", "autostockpile").
 			Msg("custom action arg is nil")
-		return false
-	}
-
-	cfg, err := getSelectionConfigFromNode(ctx, arg.CurrentTaskName)
-	if err != nil {
-		log.Error().
-			Err(err).
-			Str("component", "autostockpile").
-			Str("step", "load_selection_config").
-			Msg("invalid selection config")
 		return false
 	}
 
@@ -56,110 +46,175 @@ func (a *SelectItemAction) Run(ctx *maa.Context, arg *maa.CustomActionArg) bool 
 			Msg("failed to parse recognition result")
 		return false
 	}
+	if err := result.Validate(); err != nil {
+		log.Error().
+			Err(err).
+			Str("component", "autostockpile").
+			Msg("recognition result violates contract")
+		return false
+	}
+
+	goodsCount := 0
+	stockBillAmount := 0
+	stockBillAvailable := false
+	sunday := false
+	if result.Data != nil {
+		goodsCount = len(result.Data.Goods)
+		stockBillAmount = result.Data.StockBillAmount
+		stockBillAvailable = result.Data.StockBillAvailable
+		sunday = result.Data.Sunday
+	}
 
 	log.Info().
 		Str("component", "autostockpile").
-		Bool("overflow", result.Overflow).
-		Bool("sunday", result.Sunday).
-		Int("goods_count", len(result.Goods)).
+		Bool("overflow", result.hasOverflow()).
+		Bool("sunday", sunday).
+		Str("abort_reason", string(result.AbortReason)).
+		Int("stock_bill_amount", stockBillAmount).
+		Bool("stock_bill_available", stockBillAvailable).
+		Int("goods_count", goodsCount).
 		Msg("recognition result parsed")
+
+	if shouldStopTask(result.AbortReason) {
+		return stopTaskWithFocus(ctx, result.AbortReason, nil)
+	}
+	if shouldRouteSkip(result.AbortReason) {
+		return routeSkipWithAbortReason(ctx, arg.CurrentTaskName, result.AbortReason, nil, "识别阶段提前结束")
+	}
+
+	data := result.Data
+	region, anchor, err := resolveGoodsRegion(ctx)
+	if err != nil {
+		return stopTaskWithFocus(ctx, AbortReasonRegionResolveFailedFatal, err)
+	}
+	log.Info().
+		Str("component", "autostockpile").
+		Str("anchor", anchor).
+		Str("region", region).
+		Msg("selector region resolved")
+
+	cfg, abortReason, err := getSelectionConfigFromNode(ctx, arg.CurrentTaskName, region)
+	if err != nil {
+		return stopTaskWithFocus(ctx, abortReason, err)
+	}
 
 	// OverflowMode intentionally shares the same threshold-bypass path as SundayMode.
 	// Although the option key is named AutoStockpileOverflowBuyLowPriceGoods,
 	// the expected behavior is to allow above-threshold purchases when stock is overflowing.
-	bypassThresholdFilter := (result.Overflow && cfg.OverflowMode) || (result.Sunday && cfg.SundayMode)
+	bypassThresholdFilter := (result.hasOverflow() && cfg.OverflowMode) || (data.Sunday && cfg.SundayMode)
 	if bypassThresholdFilter {
 		log.Info().
 			Str("component", "autostockpile").
-			Bool("overflow_allow", result.Overflow && cfg.OverflowMode).
-			Bool("sunday_allow", result.Sunday && cfg.SundayMode).
+			Bool("overflow_allow", result.hasOverflow() && cfg.OverflowMode).
+			Bool("sunday_allow", data.Sunday && cfg.SundayMode).
 			Msg("allow all goods mode enabled")
 	}
 
-	selection := SelectBestProduct(result, cfg, bypassThresholdFilter)
+	selection := SelectBestProduct(*data, cfg, bypassThresholdFilter)
 	if !selection.Selected {
 		log.Info().
 			Str("component", "autostockpile").
 			Str("reason", selection.Reason).
 			Msg("no qualifying product selected")
-		maafocus.NodeActionStarting(ctx, fmt.Sprintf("未找到符合条件的物资 (原因: %s)", selection.Reason))
-		if err := ctx.OverridePipeline(buildNoCandidateResetOverride()); err != nil {
-			log.Error().
-				Err(err).
-				Str("component", "autostockpile").
-				Str("node", selectedGoodsClickNodeName+","+swipeMaxNodeName+","+swipeSpecificQuantityNodeName).
-				Msg("failed to reset no-candidate pipeline state")
-			return false
-		}
-		if err := ctx.OverrideNext(arg.CurrentTaskName, buildNoCandidateNextItems()); err != nil {
+		maafocus.NodeActionStarting(ctx, fmt.Sprintf("未找到符合条件的商品 (%s)", selection.Reason))
+		if err := overrideSkipBranch(ctx, arg.CurrentTaskName); err != nil {
 			log.Error().
 				Err(err).
 				Str("component", "autostockpile").
 				Str("node", arg.CurrentTaskName).
-				Str("next", noCandidateNodeName).
-				Msg("failed to override next for no-candidate branch")
+				Str("next", skipNodeName).
+				Msg("failed to short-circuit to skip branch")
 			return false
 		}
 		return true
 	}
 
-	if err := ctx.OverridePipeline(map[string]any{
-		"AutoStockpileSelectedGoodsClick": map[string]any{
-			"enabled":  true,
-			"template": []string{BuildTemplatePath(selection.ProductID)},
-		},
-	}); err != nil {
-		log.Error().
-			Err(err).
-			Str("component", "autostockpile").
-			Str("node", "AutoStockpileSelectedGoodsClick").
-			Msg("failed to override pipeline for selected goods (click)")
-		return false
+	quantityDecision, err := resolveQuantityDecision(selection, *data, cfg)
+	if err != nil {
+		return routeSkipWithAbortReason(ctx, arg.CurrentTaskName, AbortReasonStockBillUnavailableWarn, err, "已命中商品，但最终跳过购买")
 	}
-
-	overrideEnable, enableSwipeMax, enableSpecificQuantity := resolveSwipeEnable(selection, result, cfg)
-	if overrideEnable {
-		if err := ctx.OverridePipeline(map[string]any{
-			swipeMaxNodeName: map[string]any{
-				"enabled": enableSwipeMax,
-			},
-			swipeSpecificQuantityNodeName: map[string]any{
-				"enabled": enableSpecificQuantity,
-			},
-		}); err != nil {
+	if quantityDecision.Mode == quantityModeSkip {
+		quantitySkipLog := log.Info().
+			Str("component", "autostockpile").
+			Str("selection_mode", formatSelectionMode(selection, *data, cfg)).
+			Str("quantity_mode", string(quantityDecision.Mode)).
+			Str("quantity_reason", quantityDecision.Reason).
+			Bool("reserve_constraint_applied", quantityDecision.ConstraintApplied).
+			Int("quota_current", data.Quota.Current).
+			Int("quota_overflow", data.Quota.Overflow).
+			Int("reserve_stock_bill", cfg.ReserveStockBill)
+		if quantityDecision.ConstraintApplied {
+			quantitySkipLog = quantitySkipLog.Int("max_buy", quantityDecision.MaxBuy)
+		}
+		quantitySkipLog.Msg("quantity decision requested skip short-circuit")
+		maafocus.NodeActionStarting(ctx, fmt.Sprintf("已命中商品，但最终不购买（%s）", quantityDecision.Reason))
+		if err := overrideSkipBranch(ctx, arg.CurrentTaskName); err != nil {
 			log.Error().
 				Err(err).
 				Str("component", "autostockpile").
-				Str("node", swipeMaxNodeName+","+swipeSpecificQuantityNodeName).
-				Msg("failed to override pipeline for swipe quantity controls")
+				Str("node", arg.CurrentTaskName).
+				Str("next", skipNodeName).
+				Msg("failed to short-circuit quantity skip branch")
 			return false
 		}
+		return true
 	}
 
-	log.Info().
+	override, err := buildSelectionPipelineOverride(ctx, selection, quantityDecision)
+	if err != nil {
+		log.Error().
+			Err(err).
+			Str("component", "autostockpile").
+			Msg("failed to build selection pipeline override")
+		return false
+	}
+
+	if err := ctx.OverridePipeline(override); err != nil {
+		log.Error().
+			Err(err).
+			Str("component", "autostockpile").
+			Str("node", selectedGoodsClickNodeName+","+swipeMaxNodeName+","+swipeSpecificQuantityNodeName).
+			Msg("failed to override selector pipeline")
+		return false
+	}
+
+	selectionMode := formatSelectionMode(selection, *data, cfg)
+	quantityLog := log.Info().
 		Str("component", "autostockpile").
+		Str("selection_mode", selectionMode).
 		Str("template", BuildTemplatePath(selection.ProductID)).
 		Str("tier", selection.CanonicalName).
 		Int("threshold", selection.Threshold).
 		Int("price", selection.CurrentPrice).
 		Int("score", selection.Score).
-		Bool("swipe_max_enabled", enableSwipeMax).
-		Bool("swipe_specific_quantity_enabled", enableSpecificQuantity).
-		Int("overflow_amount", result.OverflowAmount).
-		Msg("product selected and pipeline overridden")
-	maafocus.NodeActionStarting(ctx, fmt.Sprintf("【%s】%s (价格 %d, 阈值 %d)", formatSelectionMode(selection, result, cfg), selection.ProductName, selection.CurrentPrice, selection.Threshold))
+		Bool("reserve_constraint_applied", quantityDecision.ConstraintApplied).
+		Int("quota_current", data.Quota.Current).
+		Int("quota_overflow", data.Quota.Overflow).
+		Int("reserve_stock_bill", cfg.ReserveStockBill).
+		Str("quantity_mode", string(quantityDecision.Mode)).
+		Str("quantity_reason", quantityDecision.Reason).
+		Bool("swipe_max_enabled", quantityDecision.Mode == quantityModeSwipeMax).
+		Bool("swipe_specific_quantity_enabled", quantityDecision.Mode == quantityModeSwipeSpecificQuantity)
+	if quantityDecision.ConstraintApplied {
+		quantityLog = quantityLog.Int("max_buy", quantityDecision.MaxBuy)
+	}
+	if quantityDecision.Mode == quantityModeSwipeSpecificQuantity {
+		quantityLog = quantityLog.Int("quantity_target", quantityDecision.Target)
+	}
+	quantityLog.Msg("product selected and pipeline overridden")
+	maafocus.NodeActionStarting(ctx, fmt.Sprintf("【%s】%s (价格 %d, 阈值 %d, 数量 %s)", selectionMode, selection.ProductName, selection.CurrentPrice, selection.Threshold, formatQuantityText(quantityDecision)))
 
 	return true
 }
 
 // SelectBestProduct 按阈值与利润分数选择当前应购买的最佳商品。
-func SelectBestProduct(result RecognitionResult, cfg SelectionConfig, bypassThresholdFilter bool) SelectionResult {
-	if len(result.Goods) == 0 {
+func SelectBestProduct(data RecognitionData, cfg SelectionConfig, bypassThresholdFilter bool) SelectionResult {
+	if len(data.Goods) == 0 {
 		return SelectionResult{Selected: false, Reason: "未识别到商品"}
 	}
 
-	candidates := make([]candidateGoods, 0, len(result.Goods))
-	for _, goods := range result.Goods {
+	candidates := make([]candidateGoods, 0, len(data.Goods))
+	for _, goods := range data.Goods {
 		threshold := resolveTierThreshold(goods.Tier, cfg)
 		score := threshold - goods.Price
 
@@ -213,22 +268,116 @@ func SelectBestProduct(result RecognitionResult, cfg SelectionConfig, bypassThre
 	}
 }
 
-func resolveSwipeEnable(selection SelectionResult, result RecognitionResult, cfg SelectionConfig) (bool, bool, bool) {
-	if !selection.Selected {
-		return false, false, false
+func shouldRouteSkip(reason AbortReason) bool {
+	switch reason {
+	case AbortReasonQuotaZero,
+		AbortReasonInsufficientFunds,
+		AbortReasonStockBillUnavailableWarn,
+		AbortReasonGoodsOCRUnavailableWarn:
+		return true
+	default:
+		return false
 	}
-
-	enableSwipeMax := selection.CurrentPrice < selection.Threshold || (cfg.SundayMode && result.Sunday)
-	if enableSwipeMax {
-		return true, true, false
-	}
-	if cfg.OverflowMode && result.OverflowAmount > 0 {
-		return true, false, true
-	}
-	return true, true, false
 }
 
-func buildNoCandidateResetOverride() map[string]any {
+func shouldStopTask(reason AbortReason) bool {
+	switch reason {
+	case AbortReasonRegionResolveFailedFatal,
+		AbortReasonSelectionConfigInvalidFatal,
+		AbortReasonThresholdConfigInvalidFatal,
+		AbortReasonGoodsTierInvalidFatal:
+		return true
+	default:
+		return false
+	}
+}
+
+func lookupAbortReasonText(reason AbortReason) string {
+	reasonText, err := LookupAbortReasonZHCN(reason)
+	if err != nil {
+		log.Warn().
+			Err(err).
+			Str("component", "autostockpile").
+			Str("abort_reason", string(reason)).
+			Msg("failed to resolve abort reason message, fallback to reason key")
+		return string(reason)
+	}
+
+	return reasonText
+}
+
+func routeSkipWithAbortReason(ctx *maa.Context, currentTaskName string, reason AbortReason, err error, focusPrefix string) bool {
+	reasonText := lookupAbortReasonText(reason)
+
+	logEvent := log.Info()
+	if reason == AbortReasonStockBillUnavailableWarn || reason == AbortReasonGoodsOCRUnavailableWarn {
+		logEvent = log.Warn()
+	}
+	logEvent = logEvent.
+		Str("component", "autostockpile").
+		Str("abort_reason", string(reason)).
+		Str("abort_reason_text", reasonText)
+	if err != nil {
+		logEvent = logEvent.Err(err)
+	}
+	logEvent.Msg("routing current cycle to skip branch")
+
+	if reason == AbortReasonStockBillUnavailableWarn || reason == AbortReasonGoodsOCRUnavailableWarn {
+		maafocus.NodeActionStarting(ctx, fmt.Sprintf("<span style=\"color:orange\">⚠️%s（%s）</span>\n", focusPrefix, reasonText))
+	} else {
+		maafocus.NodeActionStarting(ctx, fmt.Sprintf("%s（%s）", focusPrefix, reasonText))
+	}
+	if err := overrideSkipBranch(ctx, currentTaskName); err != nil {
+		log.Error().
+			Err(err).
+			Str("component", "autostockpile").
+			Str("node", currentTaskName).
+			Str("next", skipNodeName).
+			Msg("failed to route abort path to skip branch")
+		return false
+	}
+
+	return true
+}
+
+func stopTaskWithFocus(ctx *maa.Context, reason AbortReason, err error) bool {
+	reasonText := lookupAbortReasonText(reason)
+
+	logEvent := log.Error().
+		Str("component", "autostockpile").
+		Str("abort_reason", string(reason)).
+		Str("abort_reason_text", reasonText)
+	if err != nil {
+		logEvent = logEvent.Err(err)
+	}
+	logEvent.Msg("stopping task due to fatal abort reason")
+
+	maafocus.NodeActionStarting(ctx, fmt.Sprintf("<span style=\"color:red\">🚨发生严重错误，已停止任务（%s）</span>\n", reasonText))
+	if ctx == nil || ctx.GetTasker() == nil {
+		log.Error().
+			Str("component", "autostockpile").
+			Str("abort_reason", string(reason)).
+			Msg("tasker is unavailable for fatal stop")
+		return false
+	}
+	// TODO 由于SubTask中的子Task错误时不能全部停止，此处使用PostStop强制停止，代价是会抛出一部分报错
+	ctx.GetTasker().PostStop()
+	return false
+}
+
+func overrideSkipBranch(ctx *maa.Context, currentTaskName string) error {
+	if err := ctx.OverridePipeline(buildSkipResetOverride()); err != nil {
+		return fmt.Errorf("reset skip pipeline state: %w", err)
+	}
+
+	if err := ctx.OverrideNext(currentTaskName, buildSkipNextItems()); err != nil {
+		return fmt.Errorf("override next for skip branch: %w", err)
+	}
+
+	return nil
+}
+
+func buildSkipResetOverride() map[string]any {
 	return map[string]any{
 		selectedGoodsClickNodeName: map[string]any{
 			"enabled": false,
@@ -242,18 +391,18 @@ func buildNoCandidateResetOverride() map[string]any {
 	}
 }
 
-func buildNoCandidateNextItems() []maa.NextItem {
-	return []maa.NextItem{{Name: noCandidateNodeName}}
+func buildSkipNextItems() []maa.NextItem {
+	return []maa.NextItem{{Name: skipNodeName}}
 }
 
-func formatSelectionMode(selection SelectionResult, result RecognitionResult, cfg SelectionConfig) string {
+func formatSelectionMode(selection SelectionResult, data RecognitionData, cfg SelectionConfig) string {
 	if selection.CurrentPrice < selection.Threshold {
 		return "低价购买"
 	}
-	if cfg.SundayMode && result.Sunday {
+	if cfg.SundayMode && data.Sunday {
 		return "周日清空"
 	}
-	if cfg.OverflowMode && result.OverflowAmount > 0 {
+	if cfg.OverflowMode && data.Quota.Overflow > 0 {
 		return "防溢出"
 	}
 	return "低价购买"
