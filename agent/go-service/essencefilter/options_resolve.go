@@ -25,7 +25,8 @@ type EssenceFilterOptionsPatch struct {
 
 	DiscardUnmatched       *bool `json:"discard_unmatched"`
 	ExportCalculatorScript *bool `json:"export_calculator_script"`
-	SkipLockedRow          *bool `json:"skip_locked_row"`
+	SkipLockedRow          *bool   `json:"skip_locked_row"`
+	InputLanguage          *string `json:"input_language"`
 }
 
 func defaultEssenceFilterOptions() EssenceFilterOptions {
@@ -44,6 +45,7 @@ func defaultEssenceFilterOptions() EssenceFilterOptions {
 		DiscardUnmatched:         false,
 		ExportCalculatorScript:   false,
 		SkipLockedRow:            true,
+		InputLanguage:            "CN",
 	}
 }
 
@@ -64,7 +66,7 @@ func resolveOptions(ctx *maa.Context, arg *maa.CustomActionArg, legacyNodeNames 
 		applyOptionsPatch(&opts, patch)
 	}
 
-	// 3) 最后按兼容节点名兜底
+	// 3) 最后按明确传入的额外节点叠加（调用方自行决定是否传）
 	for _, nodeName := range legacyNodeNames {
 		if strings.TrimSpace(nodeName) == "" {
 			continue
@@ -89,17 +91,6 @@ func decodeOptionsPatch(raw string) (EssenceFilterOptionsPatch, error) {
 	var patch EssenceFilterOptionsPatch
 	if err := json.Unmarshal([]byte(raw), &patch); err == nil {
 		return patch, nil
-	}
-
-	// 兼容：有些调用方可能把 JSON 又包成了字符串
-	var nested string
-	if err := json.Unmarshal([]byte(raw), &nested); err == nil {
-		nested = strings.TrimSpace(nested)
-		if nested != "" && nested != "null" {
-			if err := json.Unmarshal([]byte(nested), &patch); err == nil {
-				return patch, nil
-			}
-		}
 	}
 
 	return EssenceFilterOptionsPatch{}, fmt.Errorf("invalid essence filter options JSON")
@@ -170,6 +161,9 @@ func applyOptionsPatch(dst *EssenceFilterOptions, patch EssenceFilterOptionsPatc
 	}
 	if patch.SkipLockedRow != nil {
 		dst.SkipLockedRow = *patch.SkipLockedRow
+	}
+	if patch.InputLanguage != nil {
+		dst.InputLanguage = *patch.InputLanguage
 	}
 }
 
