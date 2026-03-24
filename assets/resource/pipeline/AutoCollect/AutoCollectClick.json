@@ -125,12 +125,12 @@
         //     }
         // },
         "repeat": 3,
-        "focus": {
-            "Node.Recognition.Succeeded": "识别到采集物"
-        },
         "next": [
             "AutoCollectClickEnd"
-        ]
+        ],
+        "focus": {
+            "Node.Recognition.Succeeded": "识别到采集物"
+        }
     },
     "AutoCollectClickEnd": {
         "pre_delay": 0,

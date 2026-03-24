@@ -144,8 +144,8 @@
             135,
             71
         ],
-        "color_filter": "CreditShoppingReserveCreditOCRInternalColor",
-        "expected": "^\\d+$"
+        "expected": "^\\d+$",
+        "color_filter": "CreditShoppingReserveCreditOCRInternalColor"
     },
     "CreditShoppingReserveCreditOCRInternalColor": {
         "recognition": {
@@ -251,7 +251,6 @@
         "recognition": {
             "type": "And",
             "param": {
-                "box_index": 1,
                 "all_of": [
                     {
                         "recognition": {
@@ -276,7 +275,8 @@
                             }
                         }
                     }
-                ]
+                ],
+                "box_index": 1
             }
         },
         "action": {

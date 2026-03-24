@@ -20,7 +20,7 @@ The core maintenance points of AutoStockpile are as follows:
 | Main stockpiling Pipeline     | `assets/resource/pipeline/AutoStockpile/Task.json`   | Executes recognition, clicking, and purchasing flows                                |
 | Recognition node defaults     | `assets/resource/pipeline/AutoStockpile/Helper.json` | Default parameters for overflow detection, goods OCR, template matching, etc.       |
 | Go recognition/decision logic | `agent/go-service/autostockpile/`                    | Applies runtime recognition overrides, parses results, and applies thresholds       |
-| Multilingual copy             | `assets/locales/interface/*.json`                         | UI text for AutoStockpile tasks and options                                         |
+| Multilingual copy             | `assets/locales/interface/*.json`                    | UI text for AutoStockpile tasks and options                                         |
 
 ## Naming Conventions
 

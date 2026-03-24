@@ -20,7 +20,7 @@ AutoStockpile 的核心维护点如下：
 | 囤货主流程 Pipeline | `assets/resource/pipeline/AutoStockpile/Task.json`   | 执行识别、点击、购买等流程                       |
 | 识别节点默认配置    | `assets/resource/pipeline/AutoStockpile/Helper.json` | 溢出检测、商品 OCR、模板匹配等识别节点的默认参数 |
 | Go 识别/决策逻辑    | `agent/go-service/autostockpile/`                    | 运行时覆盖识别节点、解析结果、应用阈值           |
-| 多语言文案          | `assets/locales/interface/*.json`                         | AutoStockpile 任务与选项文案                     |
+| 多语言文案          | `assets/locales/interface/*.json`                    | AutoStockpile 任务与选项文案                     |
 
 ## 命名规则
 
