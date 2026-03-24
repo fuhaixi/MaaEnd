@@ -515,6 +515,7 @@
     "option.UseAllExpireSoonMedication.description": "Use all emergency sanity boosters with less than three days remaining (timer turns red).",
     "task.AutoCollect.description": "Automatically collect wild resources (the game must stay in the foreground; do not move the mouse).\nNote: if crops have not fully grown, they may grow randomly, which can lead to incomplete collection.\nDue to recognition accuracy limits, even when fully grown some may not be collected.",
     "task.AutoCollect.label": "🧺 Auto Collect Resources",
+    "option.AutoCollectRoutes.label": "Collect Routes",
     "option.AutoCollectRoute1.label": "Collect Route 1: Wuling City - Blighted Yuhua Leaf",
     "option.AutoCollectRoute2.label": "Collect Route 2: Wuling City - False Aggela",
     "option.AutoCollectRoute3.label": "Collect Route 3: Wuling City - Vitrodendra",
