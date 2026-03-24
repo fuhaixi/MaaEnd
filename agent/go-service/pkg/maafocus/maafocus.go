@@ -28,7 +28,7 @@ func Print(ctx *maa.Context, content string) {
 		SetPostDelay(0)
 	pp.AddNode(node)
 
-	if _, err := ctx.RunTask(nodeName, pp); err != nil {
+	if _, err := ctx.RunAction(nodeName, maa.Rect{}, "", pp); err != nil {
 		log.Warn().
 			Err(err).
 			Str("event", "node_action_starting").
