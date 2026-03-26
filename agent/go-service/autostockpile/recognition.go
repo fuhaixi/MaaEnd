@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"image"
 	"math"
+	"math/rand"
+	"os"
 	"regexp"
 	"sort"
 	"strconv"
@@ -18,9 +20,9 @@ import (
 
 const (
 	autoStockpileComponent = "autostockpile"
-	anchorTargetRegionName = "AutoStockpileGotoTargetRegion"
 
 	selectedGoodsClickNodeName    = "AutoStockpileSelectedGoodsClick"
+	decisionAttachNodeName        = "AutoStockpileDecisionAttach"
 	swipeSpecificQuantityNodeName = "AutoStockpileSwipeSpecificQuantity"
 	selectedGoodsClickResetY      = 180
 	findMarketMarkNodeName        = "AutoStockpileFindMarketMark"
@@ -30,6 +32,8 @@ const (
 	goodsPriceNodeName            = "AutoStockpileGetGoods"
 	// MAX_DISTANCE 表示商品与价格框可接受的最大匹配距离。
 	MAX_DISTANCE = 120
+
+	testPricesEnvVar = "MAAEND_AUTOSTOCKPILE_RECOGNITION_TEST_PRICES"
 )
 
 var (
@@ -65,7 +69,7 @@ func (r *ItemValueChangeRecognition) Run(ctx *maa.Context, arg *maa.CustomRecogn
 		return nil, false
 	}
 
-	region, anchor, err := resolveGoodsRegion(ctx)
+	region, err := resolveGoodsRegionFromTaskNode(ctx, arg.CurrentTaskName)
 	if err != nil {
 		log.Error().
 			Err(err).
@@ -77,16 +81,16 @@ func (r *ItemValueChangeRecognition) Run(ctx *maa.Context, arg *maa.CustomRecogn
 	}
 	log.Info().
 		Str("component", autoStockpileComponent).
-		Str("anchor", anchor).
+		Str("node", arg.CurrentTaskName).
 		Str("region", region).
 		Msg("goods region resolved")
 
-	cfg, abortReason, err := getSelectionConfigFromNode(ctx, arg.CurrentTaskName, region)
+	cfg, abortReason, err := getSelectionConfigFromNode(ctx, decisionAttachNodeName, region)
 	if err != nil {
 		log.Error().
 			Err(err).
 			Str("component", autoStockpileComponent).
-			Str("node", arg.CurrentTaskName).
+			Str("node", decisionAttachNodeName).
 			Str("region", region).
 			Str("abort_reason", string(abortReason)).
 			Msg("failed to load selection config for recognition")
@@ -116,7 +120,9 @@ func (r *ItemValueChangeRecognition) Run(ctx *maa.Context, arg *maa.CustomRecogn
 	} else {
 		log.Warn().
 			Str("component", autoStockpileComponent).
-			Msg("overflow detail unavailable")
+			Str("abort_reason", string(AbortReasonQuotaUnavailableWarn)).
+			Msg("overflow detail unavailable, aborting with warning")
+		return buildAbortedRecognitionResult(arg, AbortReasonQuotaUnavailableWarn)
 	}
 
 	if overflowAbortReason != AbortReasonNone {
@@ -157,10 +163,10 @@ func (r *ItemValueChangeRecognition) Run(ctx *maa.Context, arg *maa.CustomRecogn
 			Int("overflow_amount", overflowAmount).
 			Int("stock_bill_amount", stockBillAmount).
 			Int("reserve_stock_bill", cfg.ReserveStockBill).
-			Str("abort_reason", string(AbortReasonInsufficientFunds)).
+			Str("abort_reason", string(AbortReasonInsufficientFundsSkip)).
 			Msg("stock bill below reserve threshold, aborting recognition before goods scan")
 
-		return buildAbortedRecognitionResult(arg, AbortReasonInsufficientFunds)
+		return buildAbortedRecognitionResult(arg, AbortReasonInsufficientFundsSkip)
 	}
 
 	itemMap := GetItemMap()
@@ -336,6 +342,8 @@ func (r *ItemValueChangeRecognition) Run(ctx *maa.Context, arg *maa.CustomRecogn
 		return buildAbortedRecognitionResult(arg, AbortReasonGoodsTierInvalidFatal)
 	}
 
+	applyTestPricesIfEnabled(resultGoods)
+
 	resultPayload := RecognitionResult{
 		Data: &RecognitionData{
 			Quota: QuotaInfo{
@@ -414,6 +422,21 @@ func itemMapCounts(itemMap *ItemMap) (nameCount int, idCount int) {
 	return len(itemMap.NameToID), len(itemMap.IDToName)
 }
 
+func itemMapHasRegion(itemMap *ItemMap, region string) bool {
+	if itemMap == nil || len(itemMap.IDToName) == 0 {
+		return false
+	}
+
+	prefix := region + "/"
+	for id := range itemMap.IDToName {
+		if strings.HasPrefix(id, prefix) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func listUnboundRegionItemIDs(itemMap *ItemMap, region string, boundIDs map[string]bool) []string {
 	if itemMap == nil || len(itemMap.IDToName) == 0 {
 		return nil
@@ -451,7 +474,11 @@ func runOverflowDetailOCR(ctx *maa.Context, img image.Image) (current int, max i
 		return 0, 0, 0, false
 	}
 
-	plus = runOverflowQuotaAdditionOCR(ctx, img)
+	plus, ok = runOverflowQuotaAdditionOCR(ctx, img)
+	if !ok {
+		return 0, 0, 0, false
+	}
+
 	return current, max, plus, true
 }
 
@@ -469,7 +496,7 @@ func parseOverflowCurrentMax(texts []string) (current int, max int, ok bool) {
 	return 0, 0, false
 }
 
-func runOverflowQuotaAdditionOCR(ctx *maa.Context, img image.Image) int {
+func runOverflowQuotaAdditionOCR(ctx *maa.Context, img image.Image) (plus int, ok bool) {
 	detail, err := ctx.RunRecognition(overflowQuotaAdditionNodeName, img, nil)
 	if err != nil {
 		log.Warn().
@@ -477,23 +504,32 @@ func runOverflowQuotaAdditionOCR(ctx *maa.Context, img image.Image) int {
 			Str("component", autoStockpileComponent).
 			Str("step", "overflow_quota_addition_ocr").
 			Msg("failed to run overflow quota addition ocr")
-		return 0
+		return 0, false
 	}
 
-	return parseOverflowPlus(extractOCRTexts(detail))
+	plus, ok = parseOverflowPlus(extractOCRTexts(detail))
+	if !ok {
+		log.Warn().
+			Str("component", autoStockpileComponent).
+			Str("step", "overflow_quota_addition_ocr_parse").
+			Msg("failed to parse overflow quota addition")
+		return 0, false
+	}
+
+	return plus, true
 }
 
-func parseOverflowPlus(texts []string) int {
+func parseOverflowPlus(texts []string) (int, bool) {
 	for _, text := range texts {
 		if match := overflowPlusRe.FindStringSubmatch(text); len(match) == 2 {
 			plusValue, parseErr := strconv.Atoi(match[1])
 			if parseErr == nil {
-				return plusValue
+				return plusValue, true
 			}
 		}
 	}
 
-	return 0
+	return 0, false
 }
 
 func resolveOverflow(current int, max int, plus int) (overflowDetected bool, overflowAmount int) {
@@ -503,7 +539,7 @@ func resolveOverflow(current int, max int, plus int) (overflowDetected bool, ove
 
 func resolveAbortReasonFromOverflowCurrent(current int) AbortReason {
 	if current == 0 {
-		return AbortReasonQuotaZero
+		return AbortReasonQuotaZeroSkip
 	}
 
 	return AbortReasonNone
@@ -521,24 +557,71 @@ func buildCustomRecognitionResult(arg *maa.CustomRecognitionArg, payload Recogni
 	}, nil
 }
 
-func resolveGoodsRegion(ctx *maa.Context) (region string, anchor string, err error) {
+func resolveGoodsRegionFromTaskNode(ctx *maa.Context, taskName string) (string, error) {
 	if ctx == nil {
-		return "", "", fmt.Errorf("context is nil")
+		return "", fmt.Errorf("context is nil")
+	}
+	if strings.TrimSpace(taskName) == "" {
+		return "", fmt.Errorf("task name is empty")
 	}
 
-	anchor, err = ctx.GetAnchor(anchorTargetRegionName)
+	node, err := ctx.GetNode(taskName)
 	if err != nil {
-		return "", "", fmt.Errorf("get anchor %s: %w", anchorTargetRegionName, err)
+		return "", fmt.Errorf("get node %s: %w", taskName, err)
+	}
+	if node.Action == nil {
+		return "", fmt.Errorf("node %s missing action", taskName)
 	}
 
-	switch anchor {
-	case "SceneEnterMenuRegionalDevelopmentValleyIVStockRedistribution":
-		return "ValleyIV", anchor, nil
-	case "SceneEnterMenuRegionalDevelopmentWulingStockRedistribution":
-		return "Wuling", anchor, nil
-	default:
-		return "", anchor, fmt.Errorf("unexpected anchor value %q", anchor)
+	param, ok := node.Action.Param.(*maa.CustomActionParam)
+	if !ok || param == nil {
+		return "", fmt.Errorf("node %s action param type %T is not *maa.CustomActionParam", taskName, node.Action.Param)
 	}
+
+	return resolveGoodsRegionFromCustomActionParam(param.CustomActionParam)
+}
+
+func resolveGoodsRegionFromActionArg(arg *maa.CustomActionArg) (string, error) {
+	if arg == nil {
+		return "", fmt.Errorf("custom action arg is nil")
+	}
+
+	return resolveGoodsRegionFromCustomActionParam(arg.CustomActionParam)
+}
+
+func resolveGoodsRegionFromCustomActionParam(raw any) (string, error) {
+	if raw == nil {
+		return "", fmt.Errorf("custom_action_param is nil")
+	}
+
+	param, err := normalizeCustomActionParam(raw)
+	if err != nil {
+		return "", fmt.Errorf("normalize custom_action_param: %w", err)
+	}
+
+	regionValue, ok := param["Region"]
+	if !ok {
+		return "", fmt.Errorf("custom_action_param.Region is required")
+	}
+
+	region, ok := regionValue.(string)
+	if !ok {
+		return "", fmt.Errorf("custom_action_param.Region type %T is not string", regionValue)
+	}
+	region = strings.TrimSpace(region)
+	if region == "" {
+		return "", fmt.Errorf("custom_action_param.Region is empty")
+	}
+
+	itemMap := GetItemMap()
+	if err := validateItemMap(itemMap); err != nil {
+		return "", fmt.Errorf("item_map unavailable: %w", err)
+	}
+	if !itemMapHasRegion(itemMap, region) {
+		return "", fmt.Errorf("custom_action_param.Region %q not found in item_map", region)
+	}
+
+	return region, nil
 }
 
 func runGoodsTemplateMatch(ctx *maa.Context, img image.Image, templatePath string, goodsROI []int) (*maa.RecognitionDetail, error) {
@@ -819,6 +902,78 @@ func validateRecognizedGoodsTiers(goods []GoodsItem) error {
 	}
 
 	return nil
+}
+
+func applyTestPricesIfEnabled(goods []GoodsItem) {
+	if os.Getenv(testPricesEnvVar) == "" {
+		return
+	}
+
+	if len(goods) == 0 {
+		return
+	}
+
+	if len(goods) == 1 {
+		goods[0].Price = 200
+		log.Info().
+			Str("component", autoStockpileComponent).
+			Str("goods_id", goods[0].ID).
+			Str("goods_name", goods[0].Name).
+			Int("new_price", 200).
+			Msg("test price rewrite applied (1 item)")
+		return
+	}
+
+	indices := make([]int, len(goods))
+	for i := range indices {
+		indices[i] = i
+	}
+
+	rand.Shuffle(len(indices), func(i, j int) {
+		indices[i], indices[j] = indices[j], indices[i]
+	})
+
+	targetCount100 := 2
+	targetCount200 := 1
+
+	if len(goods) == 2 {
+		targetCount100 = 1
+		targetCount200 = 1
+	} else if len(goods) >= 3 {
+		targetCount100 = 2
+		targetCount200 = 1
+	}
+
+	count100 := 0
+	for i := 0; i < len(indices) && count100 < targetCount100; i++ {
+		goods[indices[i]].Price = 100
+		log.Info().
+			Str("component", autoStockpileComponent).
+			Str("goods_id", goods[indices[i]].ID).
+			Str("goods_name", goods[indices[i]].Name).
+			Int("new_price", 100).
+			Msg("test price rewrite applied (100)")
+		count100++
+	}
+
+	count200 := 0
+	for i := targetCount100; i < len(indices) && count200 < targetCount200; i++ {
+		goods[indices[i]].Price = 200
+		log.Info().
+			Str("component", autoStockpileComponent).
+			Str("goods_id", goods[indices[i]].ID).
+			Str("goods_name", goods[indices[i]].Name).
+			Int("new_price", 200).
+			Msg("test price rewrite applied (200)")
+		count200++
+	}
+
+	log.Info().
+		Str("component", autoStockpileComponent).
+		Int("total_goods", len(goods)).
+		Int("modified_count_100", count100).
+		Int("modified_count_200", count200).
+		Msg("test price rewrite finished")
 }
 
 func overrideGoodsPriceROI(ctx *maa.Context, goodsROI []int) error {

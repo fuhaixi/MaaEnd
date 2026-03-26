@@ -84,17 +84,16 @@ func (a *SelectItemAction) Run(ctx *maa.Context, arg *maa.CustomActionArg) bool 
 	}
 
 	data := result.Data
-	region, anchor, err := resolveGoodsRegion(ctx)
+	region, err := resolveGoodsRegionFromActionArg(arg)
 	if err != nil {
 		return stopTaskWithFocus(ctx, AbortReasonRegionResolveFailedFatal, err)
 	}
 	log.Info().
 		Str("component", "autostockpile").
-		Str("anchor", anchor).
 		Str("region", region).
 		Msg("selector region resolved")
 
-	cfg, abortReason, err := getSelectionConfigFromNode(ctx, arg.CurrentTaskName, region)
+	cfg, abortReason, err := getSelectionConfigFromNode(ctx, decisionAttachNodeName, region)
 	if err != nil {
 		return stopTaskWithFocus(ctx, abortReason, err)
 	}
@@ -111,7 +110,7 @@ func (a *SelectItemAction) Run(ctx *maa.Context, arg *maa.CustomActionArg) bool 
 			Msg("allow all goods mode enabled")
 	}
 
-	selection := SelectBestProduct(*data, cfg, bypassThresholdFilter)
+	selection, quantityDecision, err := computeDecision(*data, cfg, bypassThresholdFilter)
 	if !selection.Selected {
 		log.Info().
 			Str("component", "autostockpile").
@@ -130,7 +129,6 @@ func (a *SelectItemAction) Run(ctx *maa.Context, arg *maa.CustomActionArg) bool 
 		return true
 	}
 
-	quantityDecision, err := resolveQuantityDecision(selection, *data, cfg)
 	if err != nil {
 		return routeSkipWithAbortReason(ctx, arg.CurrentTaskName, AbortReasonStockBillUnavailableWarn, err, i18n.T("autostockpile.hit_skip_purchase"))
 	}
@@ -178,6 +176,16 @@ func (a *SelectItemAction) Run(ctx *maa.Context, arg *maa.CustomActionArg) bool 
 			Msg("failed to override selector pipeline")
 		return false
 	}
+
+	setDecisionState(&DecisionState{
+		Region:             region,
+		EffectiveConfig:    cfg,
+		RawRecognitionData: *data,
+		CurrentDecision: currentDecision{
+			Selection:        selection,
+			QuantityDecision: quantityDecision,
+		},
+	})
 
 	selectionMode := formatSelectionMode(selection, *data, cfg)
 	quantityLog := log.Info().
@@ -270,27 +278,11 @@ func SelectBestProduct(data RecognitionData, cfg SelectionConfig, bypassThreshol
 }
 
 func shouldRouteSkip(reason AbortReason) bool {
-	switch reason {
-	case AbortReasonQuotaZero,
-		AbortReasonInsufficientFunds,
-		AbortReasonStockBillUnavailableWarn,
-		AbortReasonGoodsOCRUnavailableWarn:
-		return true
-	default:
-		return false
-	}
+	return reason.isWarn() || reason.isSkip()
 }
 
 func shouldStopTask(reason AbortReason) bool {
-	switch reason {
-	case AbortReasonRegionResolveFailedFatal,
-		AbortReasonSelectionConfigInvalidFatal,
-		AbortReasonThresholdConfigInvalidFatal,
-		AbortReasonGoodsTierInvalidFatal:
-		return true
-	default:
-		return false
-	}
+	return reason.isFatal()
 }
 
 func lookupAbortReasonText(reason AbortReason) string {
@@ -311,7 +303,7 @@ func routeSkipWithAbortReason(ctx *maa.Context, currentTaskName string, reason A
 	reasonText := lookupAbortReasonText(reason)
 
 	logEvent := log.Info()
-	if reason == AbortReasonStockBillUnavailableWarn || reason == AbortReasonGoodsOCRUnavailableWarn {
+	if reason.isWarn() {
 		logEvent = log.Warn()
 	}
 	logEvent = logEvent.
@@ -323,7 +315,7 @@ func routeSkipWithAbortReason(ctx *maa.Context, currentTaskName string, reason A
 	}
 	logEvent.Msg("routing current cycle to skip branch")
 
-	if reason == AbortReasonStockBillUnavailableWarn || reason == AbortReasonGoodsOCRUnavailableWarn {
+	if reason.isWarn() {
 		maafocus.Print(ctx, i18n.RenderHTML("autostockpile.warning_skip", map[string]any{
 			"Prefix": focusPrefix,
 			"Reason": reasonText,
@@ -385,6 +377,9 @@ func overrideSkipBranch(ctx *maa.Context, currentTaskName string) error {
 
 func buildSkipResetOverride() map[string]any {
 	return map[string]any{
+		"AutoStockpileRelayNodeDecisionReady": map[string]any{
+			"enabled": false,
+		},
 		selectedGoodsClickNodeName: map[string]any{
 			"enabled": false,
 		},
