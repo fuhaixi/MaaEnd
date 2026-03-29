@@ -1,4 +1,4 @@
-﻿{
+{
     "global.region.ValleyIV": "四号谷地",
     "global.region.Wuling": "武陵",
     "global.region.OriginiumSciencePark": "源石研究园",
@@ -394,6 +394,8 @@
     "item.YazhenSyringeB": "优质芽针针剂",
     "item.SCWulingBattery": "中容武陵电池",
     "item.CuprumPart": "赤铜零件",
+    "item.Cuprum": "赤铜块",
+    "item.CuprumComponent": "赤铜装备原件",
     "item.SCValleyBattery": "中容谷地电池",
     "item.CannedCitromeB": "优质柑实罐头",
     "item.BuckCapsuleB": "优质荞愈胶囊",

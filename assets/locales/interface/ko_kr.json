@@ -1,4 +1,4 @@
-﻿{
+{
     "global.region.ValleyIV": "제4 계곡 (Valley IV)",
     "global.region.Wuling": "무릉 (Wuling)",
     "global.region.OriginiumSciencePark": "오리지늄 연구 구역",
@@ -426,6 +426,8 @@
     "item.YazhenSyringeB": "고급 야침 주사약",
     "item.SCWulingBattery": "중용량 무릉 배터리",
     "item.CuprumPart": "적동 부품",
+    "item.Cuprum": "적동 조각",
+    "item.CuprumComponent": "적동 장비 부품",
     "item.SCValleyBattery": "중용량 협곡 배터리",
     "item.CannedCitromeB": "시트론 통조림(중)",
     "item.BuckCapsuleB": "메밀꽃 치유 캡슐(중)",

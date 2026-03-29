@@ -1,4 +1,4 @@
-﻿{
+{
     "global.region.ValleyIV": "Valley IV",
     "global.region.Wuling": "Wuling",
     "global.region.OriginiumSciencePark": "Originium Science Park",
@@ -433,6 +433,8 @@
     "item.YazhenSyringeB": "Yazhen Syringe [A]",
     "item.SCWulingBattery": "SC Wuling Battery",
     "item.CuprumPart": "Cuprium Part",
+    "item.Cuprum": "Cuprium",
+    "item.CuprumComponent": "Cuprium Component",
     "item.SCValleyBattery": "SC Valley Battery",
     "item.CannedCitromeB": "Canned Citrome [B]",
     "item.BuckCapsuleB": "Buck Capsule [B]",
