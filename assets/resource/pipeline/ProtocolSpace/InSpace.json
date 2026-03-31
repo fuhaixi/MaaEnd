@@ -209,7 +209,7 @@
         "custom_action_param": {
             "align_threshold": 120
         },
-        "post_delay": 0,
+        "post_delay": 300,
         "focus": {
             "Node.Recognition.Succeeded": "向开始点移动"
         }
@@ -290,7 +290,7 @@
         "custom_action_param": {
             "align_threshold": 120
         },
-        "post_delay": 0,
+        "post_delay": 300,
         "focus": {
             "Node.Recognition.Succeeded": "向退出点移动"
         }
