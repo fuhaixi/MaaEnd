@@ -606,5 +606,14 @@
     "resource/image/AutoEcoFarm/AutoEcoFarmFarmlandGAI": "2bb820bff2b5becb7e9980b3a144c3b2459f80f0eb5e66f9fd4ca611a007d717",
     "resource/image/DailyRewards/ProtocolNoticeSwitch": "ffb5c79182e4a5ae37ad080cea8df978d219f47ee1226f7527a11995bc730e09",
     "resource/image/AutoEcoFarm/AutoEcoFarmPlusGrey": "1994f213d04ac1950119d333ce8e667bcf97f328aa2290efe3f1a046a80e05f0",
-    "resource/image/ProtocolSpace/TeamChooseIcon": "3980a80f8f93f45c0e36e465913aa4c72caa8e1e43b55b6632b7d65b3df6a998"
+    "resource/image/ProtocolSpace/TeamChooseIcon": "3980a80f8f93f45c0e36e465913aa4c72caa8e1e43b55b6632b7d65b3df6a998",
+    "resource/image/ProtocolSpace/PromotionsLow": "414d9e712459f32bac5ed4de9d1cd71aa41a39c6f733010557402b15b8071005",
+    "resource/image/ProtocolSpace/AdvancedProgression1Low": "88137d54afaf7dccf6966b090140f83f2564b338910696ada218673dade7140b",
+    "resource/image/ProtocolSpace/AdvancedProgression3Low": "11e7df77e7fa611572e03267ca779cf137eaecfc9b7405615e74b9e5a6d47554",
+    "resource/image/ProtocolSpace/AdvancedProgression2Low": "86308bb626ac873234b77a197cc849d775dfa18a08fb149eef4debd1bb7eb207",
+    "resource/image/ProtocolSpace/AdvancedProgression4Low": "3f67bb49d1ca868a8cae133161a38f66772af86737a08bee34003e99911e5f52",
+    "resource/image/ProtocolSpace/OperatorEXPLow": "7a55f474b683c815b4bd67a57a3cb1c46118136d96f0476c6a58988a633cf87b",
+    "resource/image/ProtocolSpace/WeaponTuneLow": "52366c49c96306c57aa722621578e2e4b4c95c34af7fe9f423536e6ed97b22cf",
+    "resource/image/ProtocolSpace/AdvancedProgression5Low": "565b817e34309adab9d469100c5b7a08f13fb2b32d838a0ff35c65b833dc8690",
+    "resource/image/ProtocolSpace/SkillUpLow": "23f78f30e3c637ebcdcc7bbf089f8170c6f58e0e4cbabe45a2b175a609e9d9c3"
 }
